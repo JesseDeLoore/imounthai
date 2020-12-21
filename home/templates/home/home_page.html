@@ -1,21 +1,67 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load wagtailimages_tags %}
+{% load wagtailcore_tags %}
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
 {% endblock extra_css %}
 
 {% block content %}
-
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-{% include 'home/welcome_page.html' %}
-
+    <div class="container pt-5">
+        <div class="row">
+            <div class="col-12">
+                <div id="mainCarousel" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% for carousel_item in page.carousel_items.all %}
+                            <li data-target="#mainCarousel" data-slide-to="{{ forloop.counter0 }}"
+                                class="{% if forloop.first %}active{% endif %}"></li>
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for carousel_item in page.carousel_items.all %}
+                            <div class="carousel-item  {% if forloop.first %}active{% endif %}">
+                                <a href="{{ carousel_item.link.slug }}">
+                                    {% image carousel_item.image fill-930x675-c100 alt="Slide Image" class="d-block w-100" %}
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>{{ carousel_item.title }}</h5>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#mainCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#mainCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {{ page.intro|richtext }}
+        </div>
+        <div class="row">
+            {% for carousel_item in page.carousel_items.all %}
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div class="card">
+                        {% image carousel_item.image fill-150x120-c100 alt="Card Image" class="card-img-top" %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ carousel_item.title }}
+                        </h5>
+                        <div class="card-text">
+                            {{ carousel_item.caption }}
+                        </div>
+                    </div>
+                    <a href="{{ carousel_item.link.slug }}" class="btn btn-success">Lees meer</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock content %}
