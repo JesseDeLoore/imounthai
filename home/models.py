@@ -6,6 +6,7 @@ from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 
+from django.core.mail import send_mail
 
 class CarouselItem(Orderable):
     image = models.ForeignKey(
@@ -62,8 +63,15 @@ class ProductDetail(Orderable):
 class ProductPage(Page):
     caption = models.CharField(max_length=255, blank=True)
     general_info = RichTextField(blank=True)
-
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
     content_panels = Page.content_panels + [
+        ImageChooserPanel('image'),
         InlinePanel('product_details', label="Product Details"),
         FieldPanel('caption'),
         FieldPanel('general_info'),

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
 
@@ -13,11 +14,9 @@ urlpatterns = [
 
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
-
     path('search/', search_views.search, name='search'),
 
 ]
-
 
 if settings.DEBUG:
     from django.conf.urls.static import static
@@ -31,9 +30,10 @@ urlpatterns += [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('social', include('social_django.urls', namespace='social')),
     path("", include(wagtail_urls)),
+    url(r'^admin/django-ses/', include('django_ses.urls'))
 
-    # Alternatively, if you want Wagtail pages to be served from a subpath
-    # of your site, rather than the site root:
-    #    path("pages/", include(wagtail_urls)),
 ]
+

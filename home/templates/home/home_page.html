@@ -9,7 +9,7 @@
 {% endblock extra_css %}
 
 {% block content %}
-    <div class="container pt-5">
+    <div class="container navbar-top-padding">
         <div class="row">
             <div class="col-12">
                 <div id="mainCarousel" class="carousel slide" data-ride="carousel">
@@ -19,11 +19,11 @@
                                 class="{% if forloop.first %}active{% endif %}"></li>
                         {% endfor %}
                     </ol>
-                    <div class="carousel-inner">
+                    <div class="carousel-inner" role="listbox">
                         {% for carousel_item in page.carousel_items.all %}
                             <div class="carousel-item  {% if forloop.first %}active{% endif %}">
-                                <a href="{{ carousel_item.link.slug }}">
-                                    {% image carousel_item.image fill-930x675-c100 alt="Slide Image" class="d-block w-100" %}
+                                <a href="{% pageurl carousel_item.link %}">
+                                    {% image carousel_item.image fill-1110x625-c100 alt="Slide Image" class="img-fluid d-block w-100" %}
                                     <div class="carousel-caption d-none d-md-block">
                                         <h5>{{ carousel_item.title }}</h5>
                                     </div>
@@ -43,23 +43,30 @@
             </div>
         </div>
         <div class="row">
-            {{ page.intro|richtext }}
+            <div class="col">
+
+                {{ page.intro|richtext }}
+            </div>
         </div>
+
         <div class="row">
             {% for carousel_item in page.carousel_items.all %}
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div class="card">
-                        {% image carousel_item.image fill-150x120-c100 alt="Card Image" class="card-img-top" %}
+                        <a href="{% pageurl carousel_item.link %}">{% image carousel_item.image fill-350x186-c100 alt="Card Image" class="card-img-top" %}</a>
                     </div>
                     <div class="card-body">
+                        <a href="{% pageurl carousel_item.link %}" class="btn btn-outline-success">Lees
+                            meer</a><br/><br/>
                         <h5 class="card-title">
                             {{ carousel_item.title }}
                         </h5>
                         <div class="card-text">
+
                             {{ carousel_item.caption }}
                         </div>
                     </div>
-                    <a href="{{ carousel_item.link.slug }}" class="btn btn-success">Lees meer</a>
+
                 </div>
             {% endfor %}
         </div>
