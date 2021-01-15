@@ -179,7 +179,7 @@ WAGTAIL_SITE_NAME = "imounthai"
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'https://imounthai-dev.sennac.be'
+BASE_URL = 'https://staging.immuunthai.be'
 
 
 WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login/'
