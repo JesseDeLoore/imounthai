@@ -16,7 +16,6 @@ import os
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -103,7 +102,6 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'imounthai.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -113,7 +111,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -133,7 +130,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -146,7 +142,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -181,6 +176,15 @@ WAGTAIL_SITE_NAME = "imounthai"
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'https://staging.immuunthai.be'
 
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    'default': {
+        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
+        'OPTIONS': {
+            'features': ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'ol', 'ul', 'image', 'embed', 'code',
+                         'superscript', 'subscript', 'strikethrough', 'blockquote', 'link', 'document-link']
+        }
+    },
+}
 
 WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login/'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
@@ -201,8 +205,8 @@ SOCIAL_AUTH_PIPELINE = (
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-            'fields': 'id,name,email',
-            }
+    'fields': 'id,name,email',
+}
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 
 AWS_SES_REGION_NAME = 'eu-central-1'

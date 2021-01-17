@@ -1,9 +1,14 @@
 {% extends "base.html" %}
+{% load static %}
+{% load wagtailimages_tags %}
+{% load wagtailcore_tags %}
 
-{% block body_class %}template-404{% endblock %}
+{% block extra_css %}
+
+{% endblock extra_css %}
 
 {% block content %}
-    <h1>Page not found</h1>
+        <h1>Pagina niet gevonden</h1>
 
-    <h2>Sorry, this page could not be found.</h2>
-{% endblock %}
+        <h2>Deze pagina bestaat niet.</h2>
+{% endblock %}>

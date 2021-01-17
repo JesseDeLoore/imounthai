@@ -50,17 +50,28 @@
 <nav class="navbar navbar-expand-lg bg-primary fixed-top">
     <div class="container">
         <a class="navbar-brand" href="/"><img height="66px" src="{% static 'images/logo.png' %}"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        {% if user.is_authenticated %}
+        <ul class="navbar-nav ml-auto navbar-dark">
+            <li class="nav-item "><a class="btn btn-outline-light" href="/accounts/{{ user.id }}/edit"><span class="small">{{ user }}</span></a></li>
+            <li  class="nav-item "><a class="btn btn-outline-light" href="/shop/cart"><i class="fas fa-shopping-cart"></i></a></li>
+        </ul>
+        {% endif %}
+        <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon navbar-dark"></span>
+            <span class="navbar-toggler-icon "></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             {% main_menu template="main_menu.html" %}
         </div>
     </div>
 </nav>
+{% block background %}
+{% endblock %}
+ <div class="container navbar-top-padding">
+{% block content %}
 
-{% block content %}{% endblock %}
+{% endblock %}
+ </div>
 
 {# Global javascript #}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
