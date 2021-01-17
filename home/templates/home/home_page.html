@@ -9,7 +9,6 @@
 {% endblock extra_css %}
 
 {% block content %}
-    <div class="container navbar-top-padding">
         <div class="row">
             <div class="col-12">
                 <div id="mainCarousel" class="carousel slide" data-ride="carousel">
@@ -22,7 +21,7 @@
                     <div class="carousel-inner" role="listbox">
                         {% for carousel_item in page.carousel_items.all %}
                             <div class="carousel-item  {% if forloop.first %}active{% endif %}">
-                                <a href="{% pageurl carousel_item.link %}">
+                                <a href="{% pageurl carousel_item.link fallback="products" %}">
                                     {% image carousel_item.image fill-1110x625-c100 alt="Slide Image" class="img-fluid d-block w-100" %}
                                     <div class="carousel-caption d-none d-md-block">
                                         <h5>{{ carousel_item.title }}</h5>
@@ -53,10 +52,10 @@
             {% for carousel_item in page.carousel_items.all %}
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div class="card">
-                        <a href="{% pageurl carousel_item.link %}">{% image carousel_item.image fill-350x186-c100 alt="Card Image" class="card-img-top" %}</a>
+                        <a href="{% pageurl carousel_item.link fallback="products"  %}">{% image carousel_item.image fill-350x186-c100 alt="Card Image" class="card-img-top" %}</a>
                     </div>
                     <div class="card-body">
-                        <a href="{% pageurl carousel_item.link %}" class="btn btn-outline-success">Lees
+                        <a href="{% pageurl carousel_item.link fallback="products"  %}" class="btn btn-outline-success">Lees
                             meer</a><br/><br/>
                         <h5 class="card-title">
                             {{ carousel_item.title }}
@@ -70,5 +69,4 @@
                 </div>
             {% endfor %}
         </div>
-    </div>
 {% endblock content %}
