@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     'social_django',
     'django_ses',
+    'django_settings_export',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +86,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'django_settings_export.settings_export',
+
             ],
         },
     },
@@ -211,3 +214,9 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 
 AWS_SES_REGION_NAME = 'eu-central-1'
 AWS_SES_REGION_ENDPOINT = 'email.eu-central-1.amazonaws.com'
+
+SETTINGS_EXPORT = [
+    'GOOGLE_TAG_ID',
+    'HOTJAR_ID',
+    'HOTJAR_SV',
+]
