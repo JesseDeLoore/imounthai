@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import InlinePanel, FieldPanel, PageChooserPanel
@@ -5,6 +6,7 @@ from wagtail.core.fields import RichTextField
 
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
+
 
 class CarouselItem(Orderable):
     image = models.ForeignKey(
@@ -74,6 +76,7 @@ class ProductPage(Page):
         FieldPanel('caption'),
         FieldPanel('general_info'),
     ]
+    product_likers = models.ManyToManyField(User)
 
     class Meta:
         verbose_name = "Productpage"

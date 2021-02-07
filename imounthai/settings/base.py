@@ -53,8 +53,10 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'social_django',
+    "verify_email",
     'django_ses',
     'django_settings_export',
+    'bootstrap_modal_forms',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'wagtailmenus.context_processors.wagtailmenus',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
                 'django_settings_export.settings_export',
@@ -215,8 +218,12 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 AWS_SES_REGION_NAME = 'eu-central-1'
 AWS_SES_REGION_ENDPOINT = 'email.eu-central-1.amazonaws.com'
 
+DEFAULT_FROM_EMAIL = "no-reply@immuunthai.be"
+
 SETTINGS_EXPORT = [
     'GOOGLE_TAG_ID',
     'HOTJAR_ID',
     'HOTJAR_SV',
 ]
+
+EMAIL_FIELD_NAME = "username"

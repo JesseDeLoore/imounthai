@@ -1,0 +1,15 @@
+{% load menu_tags %}
+{% for item in menu_items %}
+    <li class="nav-item {{ item.active_class }}{% if item.has_children_in_menu %} dropdown{% endif %}">
+    {% if item.has_children_in_menu %}
+        <button href="#" class="btn btn-outline-light nav-link dropdown-toggle"
+           id="ddtoggle_{{ item.link_page.pk }}" data-toggle="dropdown" aria-haspopup="true"
+           aria-expanded="false" role="button"> {{ item.text }}<span class="caret"></span></button>
+    {% else %}
+        <a href="{{ item.href }}" class="btn btn-outline-light nav-link">{{ item.text }}</a>
+    {% endif %}
+        {% if item.has_children_in_menu %}
+            {% children_menu item.link_page template="menus/bootstrap4/sub_menu.html" %}
+        {% endif %}
+    </li>
+{% endfor %}
