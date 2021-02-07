@@ -72,7 +72,7 @@
 
 html {
     box-sizing: border-box;
-    font-family: "Roboto", sans-serif;
+    font-family: "JetBrains Mono", sans-serif;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -94,7 +94,7 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
 
 body {
     margin: 0;
-    font-family: "Roboto", sans-serif;
+    font-family: inherit;
     font-size: 1rem;
     font-weight: normal;
     line-height: 1.5;
