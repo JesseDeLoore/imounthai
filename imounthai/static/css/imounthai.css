@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Della+Respira&family=JetBrains+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap');
 
 /*
 * Orson http://en.orson.io , autreplanete http://www.autreplanete.com/
@@ -72,7 +72,7 @@
 
 html {
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+    font-family: "Roboto", sans-serif;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -94,7 +94,7 @@ article, aside, dialog, figcaption, figure, footer, header, hgroup, main, nav, s
 
 body {
     margin: 0;
-    font-family: "Poppins", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 1rem;
     font-weight: normal;
     line-height: 1.5;
@@ -215,7 +215,7 @@ a:not([href]):not([tabindex]):focus {
 }
 
 pre, code, kbd, samp {
-    font-family: monospace, monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 1em;
 }
 
@@ -365,7 +365,7 @@ template {
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     margin-bottom: 0.5rem;
-    font-family: inherit;
+    font-family: 'Della Respira', serif;
     font-weight: 500;
     line-height: 1.1;
     color: inherit;
@@ -509,7 +509,7 @@ mark, .mark {
 }
 
 code, kbd, pre, samp {
-    font-family: "Poppins", sans-serif;
+    font-family: "JetBrains Mono", sans-serif;
 }
 
 code {
@@ -4362,7 +4362,7 @@ button.close {
     z-index: 1070;
     display: block;
     margin: 0;
-    font-family: "Poppins", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: 1.5;
@@ -4476,7 +4476,7 @@ button.close {
     display: block;
     max-width: 276px;
     padding: 1px;
-    font-family: "Poppins", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-style: normal;
     font-weight: normal;
     line-height: 1.5;

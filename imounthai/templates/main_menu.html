@@ -1,9 +1,25 @@
 {% load menu_tags %}
 
-<ul class="navbar-nav ml-auto">
+
 {% for item in menu_items %}
-    <li class="nav-item">
-        <a href="{{ item.href }}" class="nav-link btn btn-outline-light" >{{ item.text }}{% if item.has_children_in_menu %} <span class="sr-only"></span>{% endif %}</a>
-    </li>
+    {% if item.has_children_in_menu %}
+        <li class="nav-item dropdown">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenu_{{ item.id }}"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                {{ item.text }}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu_{{ item.id }}">
+                {% for child in item.menu_items %}
+                    <a href="{{ child.href }}" class="nav-link btn btn-outline-light dropdown-item"
+                       type="button">{{ child.text }}</a>
+                {% endfor %}
+            </div>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a href="{{ item.href }}" class="nav-link btn btn-outline-light">
+                {{ item.text }}</a>
+        </li>
+    {% endif %}
 {% endfor %}
-</ul>
