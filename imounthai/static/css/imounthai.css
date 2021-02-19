@@ -8294,3 +8294,19 @@ a.text-dark:focus, a.text-dark:hover {
 .navbar-top-padding {
     padding-top: 113px !important;
 }
+
+.white-space-bottom-padding {
+    padding-bottom: 500px !important;
+}
+
+.split-btn-group{
+    display: flex;
+}
+
+.split-btn-left{
+    flex:8 !important;
+}
+
+.split-btn-right{
+    flex:1 !important;
+}
