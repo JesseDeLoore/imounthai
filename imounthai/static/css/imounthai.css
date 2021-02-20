@@ -155,10 +155,10 @@ dd {
 
 
 blockquote {
-  background: #f9f9f9;
-  border-left: 10px solid #ccc;
-  margin: 1.5em 10px;
-  padding: 0.5em 10px;
+    background: #f9f9f9;
+    border-left: 10px solid #ccc;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
 }
 
 dfn {
@@ -8299,14 +8299,17 @@ a.text-dark:focus, a.text-dark:hover {
     padding-bottom: 500px !important;
 }
 
-.split-btn-group{
+.split-btn-group {
     display: flex;
 }
 
-.split-btn-left{
-    flex:8 !important;
-}
+@media (max-width:960px){
 
-.split-btn-right{
-    flex:1 !important;
+    .split-btn-left {
+        flex: 8 !important;
+    }
+
+    .split-btn-right {
+        flex: 1 !important;
+    }
 }
