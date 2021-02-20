@@ -4,4 +4,10 @@ wagtailmenus
 django-settings-export
 django-verify-email
 django-bootstrap-modal-forms
-
+django-crispy-forms
+psycopg2
+django-measurement
+django-ses
+social-auth-app-django
+gunicorn
+uvicorn
