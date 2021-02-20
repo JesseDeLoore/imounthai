@@ -4,6 +4,7 @@ wagtailmenus
 django-settings-export
 django-verify-email
 django-bootstrap-modal-forms
+django-extensions
 django-crispy-forms
 psycopg2
 django-measurement
