@@ -8299,17 +8299,18 @@ a.text-dark:focus, a.text-dark:hover {
     padding-bottom: 500px !important;
 }
 
-.split-btn-group {
-    display: flex;
+.split-btn-right{
+    margin-left: -10px;
 }
-
-@media (max-width:960px){
+@media (max-width: 960px) {
 
     .split-btn-left {
-        flex: 8 !important;
+        display: inline-block;
+        width: 85%;
     }
 
     .split-btn-right {
-        flex: 1 !important;
+        display: inline-block;
+        width: 15%;
     }
 }
