@@ -3,29 +3,23 @@
 {% load wagtailimages_tags %}
 {% load wagtailcore_tags %}
 {% block background %}
-    <script>
-     var delete_bg = True;
-     if ("opacity" in document.body.style){
-         delete_bg = False;
-     }
-    </script>
+
     {% image page.specific.image fill-2240x1260 as bg_image %}
     <div id="modern-bg" style="background: url({{ bg_image.url }});
             position: fixed;
             height: 100%;
             width: 100%;
-            opacity: 15%;
+            opacity: 0.15;
             background-attachment: scroll;
             background-size: cover;
-            z-index: -1;
+            z-index: -2;
+
+            filter: alpha(opacity=15);  /* Opacity for IE8 and lower */
+            zoom: 1;
             ">
 
     </div>
 
-   {% comment %} <script>if (window.document.documentMode ||delete_bg) {
-        var bg = document.getElementById('modern-bg');
-        bg.parentElement.removeChild(bg);
-    }</script>{% endcomment %}
 {% endblock %}
 {% block content %}
 
