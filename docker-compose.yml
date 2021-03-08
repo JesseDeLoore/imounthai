@@ -1,12 +1,5 @@
-version: '3.8'
+version: '3.3'
 services:
-  wagtail:
-    build: .
-    ports:
-      - 5000:5000
-    depends_on:
-      - postgres
-
 
   postgres:
     hostname: postgres
@@ -22,4 +15,4 @@ services:
     expose:
       - 5432
     ports:
-      - 55435:5432
+      - 5432:5432

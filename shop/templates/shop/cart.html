@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    {% for order in orders %}
+        <div class="row">
+            <div class="col">
+                <h3>Bestelling # {{ order.id }}
+                    <button class="btn btn-outline-primary" data-order-id="{{ order.id }}" onclick="order(this)">Bestel!
+                    </button>
+                </h3>
+                {% for recipe in order.recipes %}
+                    <h5>{{ recipe.name }} {{ order.servings }}
+                        <button class="btn btn-outline-primary" data-order-id="{{ order.id }}"
+                                data-recipe-id="{{ recipe.id }}" onclick="modify_order(this)"><i
+                                class="fas fa-pencil-square"></i></button>
+                        <button class="btn btn-outline-danger" data-order-id="{{ order.id }}"
+                                data-recipe-id="{{ recipe.id }}" onclick="remove_order(this)"><i
+                                class="fas fa-times-circle"></i></button>
+                    </h5>
+                    <table>
+                        {% for ingredient in recipe.ingredients %}
+                            <tr>
+                                <td>{{ ingredient }}</td>
+                                <td>{{ ingredient.price }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <h5>Totaal: {{ order.total_price }}</h5>
+                {% endfor %}
+                {% for line in order.custom_orders %}
+                    <table>
+                        <tr>
+                            <td>{{ line.description }}</td>
+                            <td>{{ line.quantity }}</td>
+                            <td>{{ line.user_price }}</td>
+                            <td>{{ line.user_total }}</td>
+                        </tr>
+                    </table>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+        <div class="col">
+            {{ orders.total_price_no_vat}} <br/>
+            {{ orders.total_vat}} <br/>
+            {{ orders.total_price}} <br/>
+        </div>
+        </div>
+    {% endfor %}
+
+
+
+
+{% endblock %}

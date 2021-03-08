@@ -12,3 +12,6 @@ django-ses
 social-auth-app-django
 gunicorn
 uvicorn
+jupyter
+ipython
+django-extensions
