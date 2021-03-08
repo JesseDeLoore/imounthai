@@ -61,7 +61,7 @@ django-verify-email
 django-bootstrap-modal-forms
 django-extensions
 django-crispy-forms
-psycopg2
+psycopg2-binary
 django-measurement
 django-ses
 social-auth-app-django
