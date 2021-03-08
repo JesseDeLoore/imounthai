@@ -76,7 +76,6 @@ class ProductPage(Page):
         FieldPanel('caption'),
         FieldPanel('general_info'),
     ]
-    product_likers = models.ManyToManyField(User)
 
     class Meta:
         verbose_name = "Productpage"
