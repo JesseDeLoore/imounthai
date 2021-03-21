@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'crispy_forms',
+    'cookie_consent',
 
     'social_django',
     "verify_email",
@@ -231,3 +232,6 @@ SETTINGS_EXPORT = [
 ]
 
 EMAIL_FIELD_NAME = "username"
+
+COOKIE_CONSENT_ENABLED = True
+COOKIE_CONSENT_NAME = "cookie_consent"

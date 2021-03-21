@@ -46,7 +46,9 @@ urlpatterns += [
     path('create_account/', UserAccountCreateView.as_view(), name="create_account"),
 
     path('social', include('social_django.urls', namespace='social')),
+    path('cookies/', include('cookie_consent.urls')),
+    path('django-admin/django-ses/', include('django_ses.urls')),
+
     path("", include(wagtail_urls)),
-    url(r'^admin/django-ses/', include('django_ses.urls'))
 
 ]
