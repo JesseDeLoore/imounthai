@@ -70,3 +70,4 @@ uvicorn
 jupyter
 ipython
 django-extensions
+django-cookie-consent
