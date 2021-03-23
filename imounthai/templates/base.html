@@ -138,7 +138,13 @@
         r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
         a.appendChild(r);
     })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+</script>
 {% endif %}
+
+<script async="async" src="https://static.mobilemonkey.com/js/102095321951105.js" type="{% js_type_for_cookie_consent request "chat" "*:.mobilemonkey.com" %}" data-varname="chat"></script>
+<script type="{% js_type_for_cookie_consent request "chat" "*:.mobilemonkey.com" %}" data-varname="chat">
+window.mmDataLayer = window.mmDataLayer || [];
+function mmData(o) { mmDataLayer.push(o); }
 </script>
 {% if request|cookie_consent_enabled %}
     {% not_accepted_or_declined_cookie_groups request as cookie_groups %}
