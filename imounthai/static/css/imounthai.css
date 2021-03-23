@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Della+Respira&family=JetBrains+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Della+Respira&family==Mali:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:wght@400;700&display=swap');
 
 /*
 * Orson http://en.orson.io , autreplanete http://www.autreplanete.com/
@@ -72,7 +72,7 @@
 
 html {
     box-sizing: border-box;
-    font-family: "JetBrains Mono", sans-serif;
+    font-family: "Mali", sans-serif;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -189,7 +189,7 @@ sup {
 }
 
 a {
-    color: #234f77;
+    color: #4782A6;
     text-decoration: none;
     background-color: transparent;
     -webkit-text-decoration-skip: objects;
@@ -215,7 +215,7 @@ a:not([href]):not([tabindex]):focus {
 }
 
 pre, code, kbd, samp {
-    font-family: "JetBrains Mono", monospace;
+    font-family: "Mali", monospace;
     font-size: 1em;
 }
 
@@ -509,7 +509,7 @@ mark, .mark {
 }
 
 code, kbd, pre, samp {
-    font-family: "JetBrains Mono", sans-serif;
+    font-family: "Mali", sans-serif;
 }
 
 code {
@@ -1822,8 +1822,8 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-primary {
     color: #fff;
-    background-color: #234f77;
-    border-color: #234f77;
+    background-color: #4782A6;
+    border-color: #4782A6;
 }
 
 .btn-primary:hover {
@@ -1837,8 +1837,8 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
-    background-color: #234f77;
-    border-color: #234f77;
+    background-color: #4782A6;
+    border-color: #4782A6;
 }
 
 .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
@@ -2037,16 +2037,16 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-outline-primary {
-    color: #234f77;
+    color: #4782A6;
     background-color: transparent;
     background-image: none;
-    border-color: #234f77;
+    border-color: #4782A6;
 }
 
 .btn-outline-primary:hover {
     color: #fff;
-    background-color: #234f77;
-    border-color: #234f77;
+    background-color: #4782A6;
+    border-color: #4782A6;
 }
 
 .btn-outline-primary:focus, .btn-outline-primary.focus {
@@ -2054,14 +2054,14 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-outline-primary.disabled, .btn-outline-primary:disabled {
-    color: #234f77;
+    color: #4782A6;
     background-color: transparent;
 }
 
 .btn-outline-primary:active, .btn-outline-primary.active, .show > .btn-outline-primary.dropdown-toggle {
     color: #fff;
-    background-color: #234f77;
-    border-color: #234f77;
+    background-color: #4782A6;
+    border-color: #4782A6;
 }
 
 .btn-outline-secondary {
@@ -2262,7 +2262,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-link {
     font-weight: normal;
-    color: #234f77;
+    color: #4782A6;
     border-radius: 0;
 }
 
@@ -2431,7 +2431,7 @@ tbody.collapse.show {
 .dropdown-item.active, .dropdown-item:active {
     color: #fff;
     text-decoration: none;
-    background-color: #234f77;
+    background-color: #4782A6;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
@@ -2721,11 +2721,11 @@ tbody.collapse.show {
 
 .custom-control-input:checked ~ .custom-control-indicator {
     color: #fff;
-    background-color: #234f77;
+    background-color: #4782A6;
 }
 
 .custom-control-input:focus ~ .custom-control-indicator {
-    box-shadow: 0 0 0 1px #fff, 0 0 0 3px #234f77;
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px #4782A6;
 }
 
 .custom-control-input:active ~ .custom-control-indicator {
@@ -2765,7 +2765,7 @@ tbody.collapse.show {
 }
 
 .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-indicator {
-    background-color: #234f77;
+    background-color: #4782A6;
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3E%3Cpath stroke='%23fff' d='M0 2h4'/%3E%3C/svg%3E");
 }
 
@@ -2951,7 +2951,7 @@ tbody.collapse.show {
 
 .nav-pills .nav-link.active, .show > .nav-pills .nav-link {
     color: #fff;
-    background-color: #234f77;
+    background-color: #4782A6;
 }
 
 .nav-fill .nav-item {
@@ -3599,8 +3599,8 @@ tbody.collapse.show {
 .page-item.active .page-link {
     z-index: 2;
     color: #fff;
-    background-color: #234f77;
-    border-color: #234f77;
+    background-color: #4782A6;
+    border-color: #4782A6;
 }
 
 .page-item.disabled .page-link {
@@ -3616,7 +3616,7 @@ tbody.collapse.show {
     padding: 0.5rem 0.75rem;
     margin-left: -1px;
     line-height: 1.25;
-    color: #234f77;
+    color: #4782A6;
     background-color: #fff;
     border: 1px solid #ddd;
 }
@@ -3690,7 +3690,7 @@ tbody.collapse.show {
 
 .badge-primary {
     color: #fff;
-    background-color: #234f77;
+    background-color: #4782A6;
 }
 
 .badge-primary[href]:focus, .badge-primary[href]:hover {
@@ -3953,7 +3953,7 @@ tbody.collapse.show {
     height: 1rem;
     line-height: 1rem;
     color: #fff;
-    background-color: #234f77;
+    background-color: #4782A6;
     transition: width 0.6s ease;
 }
 
@@ -4031,8 +4031,8 @@ tbody.collapse.show {
 .list-group-item.active {
     z-index: 2;
     color: #fff;
-    background-color: #234f77;
-    border-color: #234f77;
+    background-color: #4782A6;
+    border-color: #4782A6;
 }
 
 .list-group-flush .list-group-item {
@@ -4835,7 +4835,7 @@ button.close {
 }
 
 .bg-primary {
-    background-color: #234f77 !important;
+    background-color: #4782A6 !important;
 }
 
 a.bg-primary:focus, a.bg-primary:hover {
@@ -4931,7 +4931,7 @@ a.bg-dark:focus, a.bg-dark:hover {
 }
 
 .border-primary {
-    border-color: #234f77 !important;
+    border-color: #4782A6 !important;
 }
 
 .border-secondary {
@@ -8058,7 +8058,7 @@ a.bg-dark:focus, a.bg-dark:hover {
 }
 
 .text-primary {
-    color: #234f77 !important;
+    color: #4782A6 !important;
 }
 
 a.text-primary:focus, a.text-primary:hover {
@@ -8142,7 +8142,7 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
 .swatch-blue {
-    background-color: #234f77;
+    background-color: #4782A6;
     color: #fff;
 }
 
@@ -8207,7 +8207,7 @@ a.text-dark:focus, a.text-dark:hover {
 }
 
 .swatch-primary {
-    background-color: #234f77;
+    background-color: #4782A6;
     color: #fff;
 }
 
