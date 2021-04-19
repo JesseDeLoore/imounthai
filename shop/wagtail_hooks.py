@@ -8,7 +8,7 @@ class IngredientAdmin(ModelAdmin):
     model = Ingredient
     menu_label = "Ingredienten"
     menu_icon = "table"
-    list_display = ["name", " purchase_price", " sell_price"]
+    list_display = ["name", "purchase_price", "sell_price"]
     list_filter = ["name"]
 
 

@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'home',
     'search',
     'shop',
+    # 'users',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'django_ses',
     'django_settings_export',
     'bootstrap_modal_forms',
+
 
     "django_measurement",
 ]
@@ -220,6 +222,9 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 }
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 
+# AUTH_USER_MODEL = "users.ShopUser"
+
+# WAGTAIL_USER_CUSTOM_FIELDS = ("shop_preferences", )
 AWS_SES_REGION_NAME = 'eu-central-1'
 AWS_SES_REGION_ENDPOINT = 'email.eu-central-1.amazonaws.com'
 
