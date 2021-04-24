@@ -10,6 +10,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from home.views import UserAccountCreateView
 from search import views as search_views
+from shop.views import shopping_cart
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
@@ -45,6 +46,7 @@ urlpatterns += [
 
     path('create_account/', UserAccountCreateView.as_view(), name="create_account"),
 
+    path('shop/cart/', shopping_cart, name="shopping_cart"),
     path('social', include('social_django.urls', namespace='social')),
     path('cookies/', include('cookie_consent.urls')),
     path('django-admin/django-ses/', include('django_ses.urls')),

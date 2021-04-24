@@ -1,0 +1,4 @@
+include requirements.txt
+pytest
+pytest-django
+pytest-env
