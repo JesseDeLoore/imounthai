@@ -1,4 +1,5 @@
 from decimal import Decimal
+from itertools import chain
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -51,7 +52,7 @@ class Nutrition(Orderable):
     name = models.CharField(max_length=1024, blank=False)
     scientific_name = models.CharField(max_length=1024, blank=True, default="")
     description = RichTextField(blank=True, null=True)
-    energy_per_kg = MeasurementField(measurement=Energy,blank=True, null=True)
+    energy_per_kg = MeasurementField(measurement=Energy, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.scientific_name})"
@@ -67,15 +68,17 @@ class Ingredient(ClusterableModel, Orderable):
         on_delete=models.SET_NULL,
         related_name='+'
     )
-    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
-    sell_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
+    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True,
+                                         null=True)
+    sell_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True,
+                                     null=True)
     price_unit = models.CharField(max_length=35,
                                   choices=[("g", "g"), ("kg", "kg"), ("l", "l"),
                                            ("ml", "ml"), (None, "")])
     vat_pct = models.DecimalField(max_digits=5, decimal_places=2, default=6)
 
     def __str__(self):
-        return f"{self.name} ({short(self.description)})"
+        return f"{self.name}"
 
     @property
     def price_with_vat(self):
@@ -166,13 +169,17 @@ class Order(ClusterableModel, Orderable):
 
     @property
     def total_price(self):
-        return sum(o.total_price for o in self.ordered_recipes.all()) + sum(
-            o.user_total for o in self.custom_lines.all())
+        return sum(chain(
+            (o.total_price for o in self.ordered_recipes.all()),
+            (o.user_total for o in self.custom_lines.all())
+        ))
 
     @property
     def total_vat(self):
-        return sum(o.total_vat for o in self.ordered_recipes.all()) + sum(
-            l.total_vat for l in self.custom_lines.all())
+        return sum(chain(
+            (o.total_vat for o in self.ordered_recipes.all()),
+            (l.total_vat for l in self.custom_lines.all())
+        ))
 
     @property
     def total_price_no_vat(self):
@@ -196,7 +203,7 @@ class ProcessMethod(Orderable):
     labour_multiplier = models.DecimalField(default=1, decimal_places=4, max_digits=5)
 
     def __str__(self):
-        return f"{self.name} ({short(self.description)})"
+        return f"{self.name}"
 
 
 class StorageMethod(Orderable):
@@ -206,7 +213,7 @@ class StorageMethod(Orderable):
     conserves_for = MeasurementField(measurement=Time, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} ({short(self.description)})"
+        return f"{self.name}"
 
 
 class IngredientAllergen(Orderable, MeasurementHolder):
@@ -253,7 +260,9 @@ class RecipeIngredient(Orderable, MeasurementHolder):
                                        blank=True, null=True)
 
     def __str__(self):
-        return f"{self.recipe} - {self.ingredient} - {self.get_measurement()})"
+        objs = [self.ingredient, self.get_measurement(), self.process_method,
+                self.storage_method]
+        return " - ".join(str(o) for o in objs if o)
 
     @property
     def price(self):
@@ -302,19 +311,22 @@ class OrderRecipe(Orderable):
                f"{self.recipe.base_servings * self.amount_multiplier}"
 
     @property
+    def serving_price(self):
+        return sum(i.price for i in self.recipe.ingredients.all()) + self.serving_vat
+
+    @property
     def total_price(self):
-        base_price = sum(
-            i.price for i in self.recipe.ingredients.all()) * self.amount_multiplier
+        return self.serving_price * self.amount_multiplier
+
+    @property
+    def serving_vat(self):
         if self.order.show_vat:
-            return base_price + sum(
-                i.vat for i in self.recipe.ingredients.all()) * self.amount_multiplier
-        return base_price
+            return sum(i.vat for i in self.recipe.ingredients.all())
+        return 0
 
     @property
     def total_vat(self):
-        if self.order.show_vat:
-            return self.recipe.sell_price * Decimal(0.06) * self.amount_multiplier
-        return 0
+        return self.serving_vat * self.amount_multiplier
 
 
 class OrderCustomLine(Orderable):
