@@ -51,7 +51,7 @@ class Nutrition(Orderable):
     name = models.CharField(max_length=1024, blank=False)
     scientific_name = models.CharField(max_length=1024, blank=True, default="")
     description = RichTextField(blank=True, null=True)
-    energy_per_kg = MeasurementField(measurement=Energy, null=True)
+    energy_per_kg = MeasurementField(measurement=Energy,blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({self.scientific_name})"
@@ -67,11 +67,11 @@ class Ingredient(ClusterableModel, Orderable):
         on_delete=models.SET_NULL,
         related_name='+'
     )
-    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, null=True)
-    sell_price = models.DecimalField(max_digits=7, decimal_places=4, null=True)
+    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
+    sell_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
     price_unit = models.CharField(max_length=35,
                                   choices=[("g", "g"), ("kg", "kg"), ("l", "l"),
-                                           ("ml", "ml"), (None, "")], null=True)
+                                           ("ml", "ml"), (None, "")])
     vat_pct = models.DecimalField(max_digits=5, decimal_places=2, default=6)
 
     def __str__(self):
@@ -85,6 +85,7 @@ class Ingredient(ClusterableModel, Orderable):
         FieldPanel('name'),
         FieldPanel('purchase_price'),
         FieldPanel('sell_price'),
+        FieldPanel('price_unit'),
         FieldPanel('vat_pct'),
     ]),
         FieldPanel('description'),
@@ -202,7 +203,7 @@ class StorageMethod(Orderable):
     name = models.CharField(max_length=1024)
     description = RichTextField(blank=True, default="")
     labour_multiplier = models.DecimalField(default=1, decimal_places=4, max_digits=5)
-    conserves_for = MeasurementField(measurement=Time, null=True)
+    conserves_for = MeasurementField(measurement=Time, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({short(self.description)})"
@@ -215,8 +216,8 @@ class IngredientAllergen(Orderable, MeasurementHolder):
 
     is_dangerous = models.BooleanField(default=False)
     is_trace_amount = models.BooleanField(default=False)
-    amount_mass = MeasurementField(measurement=Mass, null=True)
-    amount_volume = MeasurementField(measurement=Volume, null=True)
+    amount_mass = MeasurementField(measurement=Mass, blank=True, null=True)
+    amount_volume = MeasurementField(measurement=Volume, blank=True, null=True)
 
     def __str__(self):
         return f"{self.ingredient} - {self.allergen} - {self.get_measurement()})"
@@ -228,8 +229,8 @@ class IngredientNutrition(Orderable, MeasurementHolder):
     nutrition = models.ForeignKey(Nutrition, on_delete=models.CASCADE)
 
     is_trace_amount = models.BooleanField(default=False)
-    amount_mass = MeasurementField(measurement=Mass, null=True)
-    amount_volume = MeasurementField(measurement=Volume, null=True,
+    amount_mass = MeasurementField(measurement=Mass, blank=True, null=True)
+    amount_volume = MeasurementField(measurement=Volume, blank=True, null=True,
                                      unit_choices=MeasurementHolder.VOLUME)
 
     def __str__(self):

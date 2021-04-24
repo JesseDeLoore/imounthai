@@ -120,3 +120,5 @@ class StorageMethodFactory(DjangoModelFactory):
             i = RecipeIngredientFactory(recipe=recipe_inst, ingredient=ingr_inst)
             i.storage_method = self
             i.save()
+
+
