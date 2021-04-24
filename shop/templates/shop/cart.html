@@ -10,7 +10,7 @@
     {% for order in orders.all %}
         <div class="row">
             <div class="col">
-                <h3>Bestelling # {{ order.id }}
+                <h3>Bestelling # {{ forloop.counter  }}
                     <button class="float-right btn btn-outline-primary" data-order-id="{{ order.id }}"
                             onclick="order(this)">Bestel!
                     </button>
@@ -22,7 +22,7 @@
                                 class="fas fa-edit"></i></button>
                         <button class="float-right btn btn-outline-danger" data-order-id="{{ order.id }}"
                                 data-recipe-id="{{ recipe.id }}" onclick="remove_order(this)"><i
-                                class="fas fa-times-circle"></i></button>
+                                class="fas fa-trash"></i></button>
                     </p>
                     <table class="table table-responsive">
                         <tr>
