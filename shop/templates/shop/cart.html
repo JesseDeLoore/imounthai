@@ -16,14 +16,14 @@
                     </button>
                 </h3>
                 {% for recipe in order.ordered_recipes.all %}
-                    <h5>{{ recipe.recipe.name }} {{ recipe.servings }} Porties
+                    <p>{{ recipe.recipe.name }} {{ recipe.servings }} Porties
                         <button class=" float-right btn btn-outline-primary" data-order-id="{{ order.id }}"
                                 data-recipe-id="{{ recipe.id }}" onclick="modify_order(this)"><i
                                 class="fas fa-edit"></i></button>
                         <button class="float-right btn btn-outline-danger" data-order-id="{{ order.id }}"
                                 data-recipe-id="{{ recipe.id }}" onclick="remove_order(this)"><i
                                 class="fas fa-times-circle"></i></button>
-                    </h5>
+                    </p>
                     <table class="table table-responsive">
                         <tr>
                             <th>Ingredient</th>
@@ -34,14 +34,19 @@
                             <tr>
                                 <td width="auto">{{ ingredient }}</td>
                                 <td>&euro; {{ ingredient.ingredient.price_with_vat | floatformat:2 }}
-                                    / {{ ingredient.unit }}</td>
+                                    / {{ ingredient.ingredient.price_unit }}</td>
                                 <td>&euro; {{ ingredient.price_with_vat | floatformat:2 }}</td>
                             </tr>
                         {% endfor %}
                         <tr>
+                          <td></td>
+                          <th>Totaal 1 x gerecht</th>
+                          <td>&euro; {{ recipe.serving_price |floatformat:2 }}</td>
+                        </tr>
+                        <tr>
                             <td>
                             </td>
-                            <td>Totaal:</td>
+                            <th>Totaal ( x {{ recipe.amount_multiplier }})</th>
                             <td>&euro; {{ recipe.total_price | floatformat:2 }}</td>
                         </tr>
                     </table>
