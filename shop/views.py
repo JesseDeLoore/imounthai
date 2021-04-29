@@ -45,7 +45,7 @@ class OrderRecipeUpdateView(BSModalUpdateView):
 def create_new_temp_recipe(request:HttpRequest, order, recipe):
     order = OrderRecipe.objects.get(pk=order)
     recipe = Recipe.objects.get(pk=recipe)
-    rand_suffix = f'{randrange(16 ** 6):030x}'
+    rand_suffix = f'{randrange(16 ** 6):06x}'
     temp_recipe = recipe.create_temp_copy(f"-{request.user.username}-{rand_suffix}")
     order.recipe = temp_recipe
     order.save()
