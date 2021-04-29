@@ -10,7 +10,8 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from home.views import UserAccountCreateView
 from search import views as search_views
-from shop.views import shopping_cart
+from shop.views import shopping_cart, RecipeRemoveView, RecipeUpdateView, \
+    create_new_temp_recipe, OrderRecipeUpdateView
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
@@ -47,6 +48,10 @@ urlpatterns += [
     path('create_account/', UserAccountCreateView.as_view(), name="create_account"),
 
     path('shop/cart/', shopping_cart, name="shopping_cart"),
+    path('shop/order/create_temp_recipe/<int:order>/<int:recipe>', create_new_temp_recipe, name="create_temp_recipe"),
+    path('shop/order/update_temp_recipe/<int:pk>', RecipeUpdateView.as_view(), name="update_temp_recipe"),
+    path('shop/order/remove_recipe/<int:pk>', RecipeRemoveView.as_view(), name="remove_recipe"),
+    path('shop/order/set_order_amount/<int:pk>', OrderRecipeUpdateView.as_view(), name="update_order_quant"),
     path('social', include('social_django.urls', namespace='social')),
     path('cookies/', include('cookie_consent.urls')),
     path('django-admin/django-ses/', include('django_ses.urls')),

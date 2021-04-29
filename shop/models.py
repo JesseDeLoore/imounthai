@@ -110,8 +110,10 @@ class Recipe(ClusterableModel, Orderable):
     )
 
     is_temporary = models.BooleanField(blank=False, default=False)
-    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, default=0)
-    sell_price = models.DecimalField(max_digits=7, decimal_places=4, default=0)
+    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, default=0,
+                                         blank=True)
+    sell_price = models.DecimalField(max_digits=7, decimal_places=4, default=0,
+                                     blank=True)
 
     def __str__(self):
         if self.description:
@@ -123,6 +125,24 @@ class Recipe(ClusterableModel, Orderable):
         return sum(i.vat for i in self.ingredients.all())
 
     base_servings = models.IntegerField(default=1)
+
+    def create_temp_copy(self, suffix="-temp"):
+        old_ingredients = self.ingredients.all()
+        new = Recipe.objects.get(id=self.id)
+        new.id = None
+        new.is_temporary = True
+        new.name = self.name + suffix
+        new.save()
+        for i in old_ingredients:
+            r = RecipeIngredient(recipe=new, ingredient=i.ingredient,
+                                 to_taste=i.to_taste, amount_mass=i.amount_mass,
+                                 amount_units=i.amount_units,
+                                 amount_volume=i.amount_volume,
+                                 process_method=i.process_method,
+                                 storage_method=i.storage_method)
+            r.save()
+        new.save()
+        return new
 
     panels = [FieldRowPanel([
         FieldPanel('name'),
