@@ -2,97 +2,120 @@
 {% load static %}
 
 {% block content %}
-    <div class="row">
-        <div class="col">
-            <h3>Winkelwagen</h3>
-        </div>
+  <div class="row">
+    <div class="col">
+      <h3>Winkelwagen</h3>
     </div>
-    {% for order in orders.all %}
-        <div class="row">
-            <div class="col">
-                <h3>Bestelling # {{ order.id }}
-                    <button class="float-right btn btn-outline-primary" data-order-id="{{ order.id }}"
-                            onclick="order(this)">Bestel!
-                    </button>
-                </h3>
-                {% for recipe in order.ordered_recipes.all %}
-                    <p>{{ recipe.recipe.name }} {{ recipe.servings }} Porties
-                        <button class=" float-right btn btn-outline-primary" data-order-id="{{ order.id }}"
-                                data-recipe-id="{{ recipe.id }}" onclick="modify_order(this)"><i
-                                class="fas fa-edit"></i></button>
-                        <button class="float-right btn btn-outline-danger" data-order-id="{{ order.id }}"
-                                data-recipe-id="{{ recipe.id }}" onclick="remove_order(this)"><i
-                                class="fas fa-times-circle"></i></button>
-                    </p>
-                    <table class="table table-responsive">
-                        <tr>
-                            <th>Ingredient</th>
-                            <th>Prijs</th>
-                            <th>Totaal</th>
-                        </tr>
-                        {% for ingredient in recipe.recipe.ingredients.all %}
-                            <tr>
-                                <td width="auto">{{ ingredient }}</td>
-                                <td>&euro; {{ ingredient.ingredient.price_with_vat | floatformat:2 }}
-                                    / {{ ingredient.ingredient.price_unit }}</td>
-                                <td>&euro; {{ ingredient.price_with_vat | floatformat:2 }}</td>
-                            </tr>
-                        {% endfor %}
-                        <tr>
-                          <td></td>
-                          <th>Totaal 1 x gerecht</th>
-                          <td>&euro; {{ recipe.serving_price |floatformat:2 }}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <th>Totaal ( x {{ recipe.amount_multiplier }})</th>
-                            <td>&euro; {{ recipe.total_price | floatformat:2 }}</td>
-                        </tr>
-                    </table>
-                {% endfor %}
-                {% for line in order.custom_lines.all %}
-                    <table class="table-responsive table">
-                        <tr>
-                            <th>Omschrijving</th>
-                            <th>Hoeveelheid</th>
-                            <th>Prijs per stuk</th>
-                            <th>Totaal</th>
-                        </tr>
-                        <tr>
-                            <td>{{ line.description }}</td>
-                            <td>{{ line.quantity }}</td>
-                            <td>&euro; {{ line.user_price |floatformat:2 }}</td>
-                            <td>&euro; {{ line.user_total |floatformat:2 }}</td>
-                        </tr>
-                    </table>
-                {% endfor %}
-            </div>
+  </div>
+  {% for order in orders.all %}
+    <div class="row">
+      <div class="col">
+        <h3>Bestelling # {{ forloop.counter }}
+          <button class="float-right btn btn-outline-primary" data-order-id="{{ order.id }}"
+                  onclick="order(this)">Bestel!
+          </button>
+        </h3>
+        {% for recipe in order.ordered_recipes.all %}
+          <p>{{ recipe.recipe.name }} <button class="btn btn-outline-primary has-modal" data-url="{% url 'update_order_quant' recipe.id %}">{{ recipe.servings }}</button> Porties
+            {% if recipe.recipe.is_temporary %}
+              <button class=" float-right btn btn-outline-primary has-modal {% if recipe.recipe.id == open_recipe %}open-modal{% endif %}"
+                      data-url="{% url 'update_temp_recipe' recipe.recipe.id %}"><i class="fas fa-edit"></i></button>
+            {% else %}
+              <a class=" float-right btn btn-outline-primary"
+                      href="{% url 'create_temp_recipe' recipe.id recipe.recipe.id %}"><i class="fas fa-edit"></i></a>
+
+            {% endif %}
+            <button class="float-right btn btn-outline-danger has-modal" data-order-id="{{ order.id }}"
+                    data-url="{% url 'remove_recipe' recipe.id %}"><i
+                class="fas fa-trash"></i></button>
+          </p>
+          <table class="table table-responsive">
+            <tr>
+              <th>Ingredient</th>
+              <th>Prijs</th>
+              <th>Totaal</th>
+            </tr>
+            {% for ingredient in recipe.recipe.ingredients.all %}
+              <tr>
+                <td width="auto">{{ ingredient }}</td>
+                <td>&euro; {{ ingredient.ingredient.price_with_vat | floatformat:2 }}
+                  / {{ ingredient.ingredient.price_unit }}</td>
+                <td>&euro; {{ ingredient.price_with_vat | floatformat:2 }}</td>
+              </tr>
+            {% endfor %}
+            <tr>
+              <td></td>
+              <th>Totaal 1 x gerecht</th>
+              <td>&euro; {{ recipe.serving_price |floatformat:2 }}</td>
+            </tr>
+            <tr>
+              <td>
+              </td>
+              <th>Totaal ( x {{ recipe.amount_multiplier }})</th>
+              <td>&euro; {{ recipe.total_price | floatformat:2 }}</td>
+            </tr>
+          </table>
+        {% endfor %}
+        {% for line in order.custom_lines.all %}
+          <table class="table-responsive table">
+            <tr>
+              <th>Omschrijving</th>
+              <th>Hoeveelheid</th>
+              <th>Prijs per stuk</th>
+              <th>Totaal</th>
+            </tr>
+            <tr>
+              <td>{{ line.description }}</td>
+              <td>{{ line.quantity }}</td>
+              <td>&euro; {{ line.user_price |floatformat:2 }}</td>
+              <td>&euro; {{ line.user_total |floatformat:2 }}</td>
+            </tr>
+          </table>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="float-right align-content-end">
+          <table>
+            <tr>
+              <th>Totaal ex BTW</th>
+              <td>&euro; {{ order.total_price_no_vat |floatformat:2 }}</td>
+            </tr>
+            <tr>
+              <th>BTW</th>
+              <td>&euro; {{ order.total_vat |floatformat:2 }}</td>
+            </tr>
+            <tr>
+              <th>Totaal incl BTW</th>
+              <td>&euro; {{ order.total_price |floatformat:2 }}</td>
+            </tr>
+          </table>
+
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="float-right align-content-end">
-                    <table>
-                        <tr>
-                            <th>Totaal ex BTW</th>
-                            <td>&euro; {{ order.total_price_no_vat |floatformat:2 }}</td>
-                        </tr>
-                        <tr>
-                            <th>BTW</th>
-                            <td>&euro; {{ order.total_vat |floatformat:2 }}</td>
-                        </tr>
-                        <tr>
-                            <th>Totaal incl BTW</th>
-                            <td>&euro; {{ order.total_price |floatformat:2 }}</td>
-                        </tr>
-                    </table>
-
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
 
 
+  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendMeasurementModal" aria-hidden="true"
+       id="modal">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
 
+      </div>
+    </div>
+  </div>
 
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+  <script>
+      $(document).ready(function () {
+          $(".has-modal").each(function () {
+              $(this).modalForm({formURL: $(this).data('url'), errorClass: "errorlist"});
+          });
+          $(".open-modal").trigger("click")
+      });
+  </script>
 {% endblock %}
