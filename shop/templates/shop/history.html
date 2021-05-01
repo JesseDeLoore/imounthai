@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <h3>Bestellingen</h3>
+
+    </div>
+  </div>
+  {% for status, orders in status_orders.items %}
+    <div class="row">
+      <div class="col">
+        <h5>{{ status }}</h5>
+      </div>
+    </div>
+    {% for order in orders.all %}
+      <div class="row">
+        <div class="col">
+          <b>{{ order.id }}: {{ order.delivery_date.date }} € {{ order.total_price|floatformat:2 }}</b><br/>
+          {% for ord2 in order.ordered_recipes.all %}
+            {{ ord2 }} <button class="btn btn-sm btn-primary text-light float-right" data-url="{% url "add_to_cart" ord2.recipe %}">Bestel nogmaals</button><br/>
+            <ul>
+            {% for ingredient in ord2.recipe.ingredients.all %}
+              <li>{{ ingredient }}</li>
+
+            {% endfor %}
+            </ul>
+          {% endfor %}
+        </div>
+      </div>
+    {% empty %}
+      <div>-- geen --</div>
+    {% endfor %}
+
+
+
+  {% endfor %}
+{% endblock %}

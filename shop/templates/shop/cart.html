@@ -11,8 +11,7 @@
     <div class="row">
       <div class="col">
         <h3>Bestelling # {{ forloop.counter }}
-          <button class="float-right btn btn-outline-primary" data-order-id="{{ order.id }}"
-                  onclick="order(this)">Bestel!
+          <button class="float-right btn btn-outline-primary has-modal" data-url="{% url 'confirm_order' order.id %}?advance_stage=1">Bestel!
           </button>
         </h3>
         {% for recipe in order.ordered_recipes.all %}
