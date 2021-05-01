@@ -4,14 +4,21 @@ from django.conf import settings
 from factory.django import DjangoModelFactory
 from measurement.measures import Mass
 
-from shop.models import Recipe, Order, Ingredient, RecipeIngredient, OrderRecipe, \
-    ProcessMethod, StorageMethod
+from shop.models import (
+    Recipe,
+    Order,
+    Ingredient,
+    RecipeIngredient,
+    OrderRecipe,
+    ProcessMethod,
+    StorageMethod,
+)
 
 
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = settings.AUTH_USER_MODEL
-        django_get_or_create = ('username',)
+        django_get_or_create = ("username",)
 
     username = factory.Faker("ascii_free_email")
     first_name = factory.Faker("first_name")
@@ -24,7 +31,7 @@ class UserFactory(DjangoModelFactory):
 class IngredientFactory(DjangoModelFactory):
     class Meta:
         model = Ingredient
-        django_get_or_create = ('name',)
+        django_get_or_create = ("name",)
 
     name = factory.Faker("name")
     description = factory.Faker("sentence", nb_words=25)
@@ -43,7 +50,7 @@ class RecipeIngredientFactory(DjangoModelFactory):
 class RecipeFactory(DjangoModelFactory):
     class Meta:
         model = Recipe
-        django_get_or_create = ('name',)
+        django_get_or_create = ("name",)
 
     name = factory.Faker("name")
     description = factory.Faker("sentence", nb_words=25)
@@ -60,22 +67,26 @@ class RecipeFactory(DjangoModelFactory):
             return
         for ingredient, amount, unit in extracted:
             ingr_inst = IngredientFactory(name=ingredient)
-            RecipeIngredientFactory(recipe=self, ingredient=ingr_inst, to_taste=False,
-                                    amount_mass=Mass(**{unit: amount}))
+            RecipeIngredientFactory(
+                recipe=self,
+                ingredient=ingr_inst,
+                to_taste=False,
+                amount_mass=Mass(**{unit: amount}),
+            )
 
 
 class OrderFactory(DjangoModelFactory):
     class Meta:
         model = Order
 
-    user = factory.RelatedFactory(UserFactory)
+    user = factory.SubFactory(UserFactory)
     notes = factory.Faker("sentence", nb_words=25)
 
 
 class OrderRecipeFactory(DjangoModelFactory):
     class Meta:
         model = OrderRecipe
-        django_get_or_create = ('order', 'recipe')
+        django_get_or_create = ("order", "recipe")
 
     amount_multiplier = 1
 
@@ -120,5 +131,3 @@ class StorageMethodFactory(DjangoModelFactory):
             i = RecipeIngredientFactory(recipe=recipe_inst, ingredient=ingr_inst)
             i.storage_method = self
             i.save()
-
-
