@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
 import django.contrib.auth.views as auth_views
@@ -9,23 +8,16 @@ from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from home.views import UserAccountCreateView
+from shop import urls as shop_urls
 from search import views as search_views
-from shop.views import (
-    shopping_cart,
-    order_history,
-    RecipeRemoveView,
-    RecipeUpdateView,
-    create_new_temp_recipe,
-    OrderRecipeUpdateView,
-    OrderUpdateView,
-    OrderRecipeCreateView,
-)
+
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    path("shop/", include(shop_urls)),
 ]
 
 if settings.DEBUG:
@@ -43,11 +35,7 @@ urlpatterns += [
     path("login/", auth_views.LoginView.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("verification/", include("verify_email.urls")),
-    path(
-        "password_change/",
-        auth_views.PasswordChangeView.as_view(),
-        name="password_change",
-    ),
+    path("password_change/", auth_views.PasswordChangeView.as_view(), name="password_change",),
     path(
         "password_change/done/",
         auth_views.PasswordChangeDoneView.as_view(),
@@ -71,37 +59,10 @@ urlpatterns += [
         name="password_reset_confirm",
     ),
     path(
-        "reset/done/",
-        auth_views.PasswordResetCompleteView.as_view(),
-        name="password_reset_complete",
+        "reset/done/", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete",
     ),
     path("create_account/", UserAccountCreateView.as_view(), name="create_account"),
-    path("shop/cart/", shopping_cart, name="shopping_cart"),
-    path("shop/cart/add/<int:pk>", OrderRecipeCreateView.as_view(), name="add_to_cart"),
-    path(
-        "shop/order/create_temp_recipe/<int:order>/<int:recipe>",
-        create_new_temp_recipe,
-        name="create_temp_recipe",
-    ),
-    path(
-        "shop/order/update_temp_recipe/<int:pk>",
-        RecipeUpdateView.as_view(),
-        name="update_temp_recipe",
-    ),
-    path(
-        "shop/order/remove_recipe/<int:pk>",
-        RecipeRemoveView.as_view(),
-        name="remove_recipe",
-    ),
-    path(
-        "shop/order/set_order_amount/<int:pk>",
-        OrderRecipeUpdateView.as_view(),
-        name="update_order_quant",
-    ),
-    path(
-        "shop/order/confirm/<int:pk>", OrderUpdateView.as_view(), name="confirm_order",
-    ),
-    path("shop/order/history", order_history, name="order_history"),
+    path("accounts/<int:pk>/edit", UserAccountCreateView.as_view(), name="edit_user"),
     path("social", include("social_django.urls", namespace="social")),
     path("cookies/", include("cookie_consent.urls")),
     path("django-admin/django-ses/", include("django_ses.urls")),

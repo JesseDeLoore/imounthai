@@ -108,13 +108,5 @@
 
 {% endblock %}
 {% block extra_js %}
-  <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
-  <script>
-      $(document).ready(function () {
-          $(".has-modal").each(function () {
-              $(this).modalForm({formURL: $(this).data('url'), errorClass: "errorlist"});
-          });
-          $(".open-modal").trigger("click")
-      });
-  </script>
+  {% include 'modal-js.html' %}
 {% endblock %}

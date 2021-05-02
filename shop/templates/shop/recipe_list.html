@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <h3>Gerechten</h3>
+    </div>
+  </div>
+  {% for recipe in object_list %}
+    <div class="row">
+    <div class="col-1"><button class="btn btn-outline-primary btn-sm has-modal" data-url="{% url "add_to_cart" recipe.id %}">Bestel</button></div>
+      <div class="col-2"><a href="{% url "recipe_detail" recipe.id %}">{{ recipe.name }}</a></div>
+      <div class="col-2">&euro;{{ recipe.serving_total_price|floatformat:2 }} per
+        {% if recipe.base_servings <= 1 %}
+          portie
+        {% else %}
+          {{ recipe.base_servings }} porties
+        {% endif %}</div>
+      <div class="col-7">
+        <ul>
+          {% for ingredient in recipe.ingredients.all %}
+            <li>{{ ingredient }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendMeasurementModal" aria-hidden="true"
+       id="modal">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block extra_js %}
+  {% include 'modal-js.html' %}
+{% endblock %}

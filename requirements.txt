@@ -65,6 +65,7 @@ psycopg2-binary
 django-measurement
 django-ses
 social-auth-app-django
+django-filter
 gunicorn
 uvicorn
 jupyter
