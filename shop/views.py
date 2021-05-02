@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView
 
 from shop.forms import (
     TemporaryRecipeForm,
@@ -38,9 +39,7 @@ def shopping_cart(request: HttpRequest):
     open_modal = request.GET.get("open_modal")
     if open_modal:
         return render(
-            request,
-            "shop/cart.html",
-            context={"orders": orders, "open_recipe": int(open_modal)},
+            request, "shop/cart.html", context={"orders": orders, "open_recipe": int(open_modal)},
         )
     return render(request, "shop/cart.html", context={"orders": orders})
 
@@ -48,13 +47,10 @@ def shopping_cart(request: HttpRequest):
 def order_history(request: HttpRequest):
     orders = _get_user_order(request.user)
     status_orders = {
-        name: orders.filter(status=status).all()
-        for status, name in OrderStatus.choices[1:]
+        name: orders.filter(status=status).all() for status, name in OrderStatus.choices[1:]
     }
 
-    return render(
-        request, "shop/history.html", context={"status_orders": status_orders}
-    )
+    return render(request, "shop/history.html", context={"status_orders": status_orders})
 
 
 class RecipeRemoveView(BSModalDeleteView):
@@ -71,7 +67,7 @@ class OrderRecipeCreateView(BSModalCreateView):
     form_class = OrderRecipeCreateForm
 
 
-class OrderRecipeUpdateView(BSModalUpdateView):
+class OrderRecipeSetAmountView(BSModalUpdateView):
     success_message = ""
     model = OrderRecipe
     success_url = reverse_lazy("shopping_cart")
@@ -118,9 +114,7 @@ class RecipeUpdateView(BSModalUpdateView):
     def get_context_data(self, **kwargs):
         data = super(RecipeUpdateView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data["ingredients"] = RecipeIngredientFormSet(
-                self.request.POST, instance=self.object
-            )
+            data["ingredients"] = RecipeIngredientFormSet(self.request.POST, instance=self.object)
         else:
             data["ingredients"] = RecipeIngredientFormSet(instance=self.object)
         return data
@@ -134,3 +128,8 @@ class RecipeUpdateView(BSModalUpdateView):
                 ingredients.instance = self.object
                 ingredients.save()
         return super(RecipeUpdateView, self).form_valid(form)
+
+
+class RecipeListView(ListView):
+    model = Recipe
+    queryset = Recipe.objects.filter(is_temporary=False).all()
