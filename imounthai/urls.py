@@ -62,6 +62,7 @@ urlpatterns += [
         "reset/done/", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete",
     ),
     path("create_account/", UserAccountCreateView.as_view(), name="create_account"),
+    path("accounts/<int:pk>/edit", UserAccountCreateView.as_view(), name="edit_user"),
     path("social", include("social_django.urls", namespace="social")),
     path("cookies/", include("cookie_consent.urls")),
     path("django-admin/django-ses/", include("django_ses.urls")),

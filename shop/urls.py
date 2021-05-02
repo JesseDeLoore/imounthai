@@ -11,6 +11,7 @@ from shop.views import (
     OrderRecipeSetAmountView,
     OrderUpdateView,
     order_history,
+    RecipeView,
 )
 
 order_url_patterns = [
@@ -28,7 +29,8 @@ order_url_patterns = [
 
 urlpatterns = [
     path("recipe", RecipeListView.as_view(), name="recipe_list"),
+    path("recipe/<int:pk>", RecipeView.as_view(), name="recipe_detail"),
     path("cart/", shopping_cart, name="shopping_cart"),
-    path("cart/add/<int:pk>", OrderRecipeCreateView.as_view(), name="add_to_cart"),
+    path("cart/add/<int:recipe>", OrderRecipeCreateView.as_view(), name="add_to_cart"),
     path("order/", include(order_url_patterns)),
 ]

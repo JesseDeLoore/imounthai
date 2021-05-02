@@ -25,9 +25,7 @@ def short(val):
 
 
 class ShopPreferences(Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="shop_preferences"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shop_preferences")
     show_vat = models.BooleanField(default=True)
 
 
@@ -64,21 +62,12 @@ class Ingredient(ClusterableModel, Orderable):
     name = models.CharField(max_length=1024, blank=False)
     description = RichTextField(blank=True, default="")
     image = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
+        "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+",
     )
-    purchase_price = models.DecimalField(
-        max_digits=7, decimal_places=4, blank=True, null=True
-    )
-    sell_price = models.DecimalField(
-        max_digits=7, decimal_places=4, blank=True, null=True
-    )
+    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
+    sell_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
     price_unit = models.CharField(
-        max_length=35,
-        choices=[("g", "g"), ("kg", "kg"), ("l", "l"), ("ml", "ml"), (None, "")],
+        max_length=35, choices=[("g", "g"), ("kg", "kg"), ("l", "l"), ("ml", "ml"), (None, "")],
     )
     vat_pct = models.DecimalField(max_digits=5, decimal_places=2, default=6)
 
@@ -110,20 +99,12 @@ class Recipe(ClusterableModel, Orderable):
     name = models.CharField(max_length=1024)
     description = RichTextField(blank=True, null=True)
     image = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
+        "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+",
     )
 
     is_temporary = models.BooleanField(blank=False, default=False)
-    purchase_price = models.DecimalField(
-        max_digits=7, decimal_places=4, default=0, blank=True
-    )
-    sell_price = models.DecimalField(
-        max_digits=7, decimal_places=4, default=0, blank=True
-    )
+    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, default=0, blank=True)
+    sell_price = models.DecimalField(max_digits=7, decimal_places=4, default=0, blank=True)
 
     def __str__(self):
         if self.description:
@@ -135,6 +116,18 @@ class Recipe(ClusterableModel, Orderable):
         return sum(i.vat for i in self.ingredients.all())
 
     base_servings = models.IntegerField(default=1)
+
+    @property
+    def serving_price(self):
+        return sum(i.price for i in self.ingredients.all())
+
+    @property
+    def serving_total_price(self):
+        return sum(i.price for i in self.ingredients.all()) + self.serving_vat
+
+    @property
+    def serving_vat(self):
+        return sum(i.vat for i in self.ingredients.all())
 
     def create_temp_copy(self, suffix="-temp"):
         old_ingredients = self.ingredients.all()
@@ -187,9 +180,7 @@ class Order(ClusterableModel, Orderable):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.CharField(
-        max_length=2, choices=OrderStatus.choices, default=OrderStatus.IN_CART
-    )
+    status = models.CharField(max_length=2, choices=OrderStatus.choices, default=OrderStatus.IN_CART)
     delivery_date = models.DateTimeField(null=True, blank=True)
     cancelled = models.BooleanField(default=False)
 
@@ -236,6 +227,14 @@ class Order(ClusterableModel, Orderable):
         self.status = new_status
         self.save()
 
+    @classmethod
+    def get_cart(cls: "Order", user: User):
+        cart = cls.objects.filter(user=user, status=OrderStatus.IN_CART).first()
+        if not cart:
+            cart = Order(user=user)
+            cart.save()
+        return cart
+
     panels = [
         FieldRowPanel(
             [
@@ -271,9 +270,7 @@ class StorageMethod(Orderable):
 
 
 class IngredientAllergen(Orderable, MeasurementHolder):
-    ingredient = ParentalKey(
-        Ingredient, on_delete=models.CASCADE, related_name="allergens"
-    )
+    ingredient = ParentalKey(Ingredient, on_delete=models.CASCADE, related_name="allergens")
     allergen = models.ForeignKey(Allergen, on_delete=models.CASCADE)
 
     is_dangerous = models.BooleanField(default=False)
@@ -286,9 +283,7 @@ class IngredientAllergen(Orderable, MeasurementHolder):
 
 
 class IngredientNutrition(Orderable, MeasurementHolder):
-    ingredient = ParentalKey(
-        Ingredient, on_delete=models.CASCADE, related_name="nutrients"
-    )
+    ingredient = ParentalKey(Ingredient, on_delete=models.CASCADE, related_name="nutrients")
     nutrition = models.ForeignKey(Nutrition, on_delete=models.CASCADE)
 
     is_trace_amount = models.BooleanField(default=False)
@@ -363,7 +358,9 @@ class OrderRecipe(Orderable):
     order = ParentalKey(Order, on_delete=models.CASCADE, related_name="ordered_recipes")
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
-    amount_multiplier = models.DecimalField(default=1, decimal_places=2, max_digits=10)
+    amount_multiplier = models.DecimalField(
+        default=1, decimal_places=2, max_digits=10, verbose_name="Aantal"
+    )
 
     def __str__(self):
         return f"{self.recipe} - {self.servings} (€ {self.total_price:.2f})"
@@ -386,7 +383,7 @@ class OrderRecipe(Orderable):
     @property
     def serving_vat(self):
         if self.order.show_vat:
-            return sum(i.vat for i in self.recipe.ingredients.all())
+            return self.recipe.serving_vat
         return 0
 
     @property
@@ -402,10 +399,7 @@ class OrderCustomLine(Orderable):
     description = models.TextField(default="")
 
     def __str__(self):
-        return (
-            f"{self.order} - {self.quantity} x {self.unit_price} "
-            f"{short(self.description)})"
-        )
+        return f"{self.order} - {self.quantity} x {self.unit_price} " f"{short(self.description)})"
 
     @property
     def user_price(self):

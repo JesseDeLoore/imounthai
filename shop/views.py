@@ -14,7 +14,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from shop.forms import (
     TemporaryRecipeForm,
@@ -63,15 +63,19 @@ class OrderRecipeCreateView(BSModalCreateView):
     success_message = ""
     success_url = reverse_lazy("shopping_cart")
     model = OrderRecipe
-    template_name = "shop/create_orderrecipe_modal.html"
+    template_name = "shop/modals/create_orderrecipe_modal.html"
     form_class = OrderRecipeCreateForm
+
+    def get_initial(self):
+        recipe_id = self.request.resolver_match.kwargs["recipe"]
+        return {"recipe": recipe_id, "order": Order.get_cart(self.request.user).id}
 
 
 class OrderRecipeSetAmountView(BSModalUpdateView):
     success_message = ""
     model = OrderRecipe
     success_url = reverse_lazy("shopping_cart")
-    template_name = "shop/order_quant_modal.html"
+    template_name = "shop/modals/order_quant_modal.html"
     form_class = OrderRecipeForm
 
 
@@ -79,7 +83,7 @@ class OrderUpdateView(BSModalUpdateView):
     success_message = ""
     model = Order
     success_url = reverse_lazy("order_history")
-    template_name = "shop/update_order_modal.html"
+    template_name = "shop/modals/update_order_modal.html"
     form_class = OrderForm
 
     def post(self, request, *args, **kwargs):
@@ -106,7 +110,7 @@ class RecipeUpdateView(BSModalUpdateView):
     # Inspired by https://dev.to/zxenia/django-inline-formsets-with-class-based-views
     # -and-crispy-forms-14o6
     model = Recipe
-    template_name = "shop/temp_recipe_modal.html"
+    template_name = "shop/modals/temp_recipe_modal.html"
     form_class = TemporaryRecipeForm
     success_message = ""
     success_url = reverse_lazy("shopping_cart")
@@ -131,5 +135,8 @@ class RecipeUpdateView(BSModalUpdateView):
 
 
 class RecipeListView(ListView):
-    model = Recipe
     queryset = Recipe.objects.filter(is_temporary=False).all()
+
+
+class RecipeView(DetailView):
+    model = Recipe
