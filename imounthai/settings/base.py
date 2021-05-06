@@ -239,3 +239,5 @@ EMAIL_FIELD_NAME = "username"
 
 COOKIE_CONSENT_ENABLED = True
 COOKIE_CONSENT_NAME = "cookie_consent"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"

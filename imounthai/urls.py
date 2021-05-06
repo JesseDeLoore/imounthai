@@ -7,7 +7,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
-from home.views import UserAccountCreateView
+from home.views import UserAccountCreateView, UserEditView, privacy_policy
 from shop import urls as shop_urls
 from search import views as search_views
 
@@ -32,6 +32,7 @@ urlpatterns += [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
+    path("privacy/", privacy_policy, name="privacy_policy"),
     path("login/", auth_views.LoginView.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("verification/", include("verify_email.urls")),
@@ -62,7 +63,7 @@ urlpatterns += [
         "reset/done/", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete",
     ),
     path("create_account/", UserAccountCreateView.as_view(), name="create_account"),
-    path("accounts/<int:pk>/edit", UserAccountCreateView.as_view(), name="edit_user"),
+    path("accounts/<int:pk>/edit", UserEditView.as_view(), name="edit_user"),
     path("social", include("social_django.urls", namespace="social")),
     path("cookies/", include("cookie_consent.urls")),
     path("django-admin/django-ses/", include("django_ses.urls")),
