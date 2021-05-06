@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+from django.urls import reverse_lazy
+
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
@@ -220,9 +222,8 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     "fields": "id,name,email",
 }
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ["username", "first_name", "email"]
-
 # AUTH_USER_MODEL = "users.ShopUser"
-
+LOGIN_REDIRECT_URL = reverse_lazy("recipe_list")
 # WAGTAIL_USER_CUSTOM_FIELDS = ("shop_preferences", )
 AWS_SES_REGION_NAME = "eu-central-1"
 AWS_SES_REGION_ENDPOINT = "email.eu-central-1.amazonaws.com"
