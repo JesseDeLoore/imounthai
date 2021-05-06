@@ -34,6 +34,7 @@ urlpatterns += [
     # the list:
     path("privacy/", privacy_policy, name="privacy_policy"),
     path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("accounts/login/", auth_views.LoginView.as_view(), name="login2"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("verification/", include("verify_email.urls")),
     path("password_change/", auth_views.PasswordChangeView.as_view(), name="password_change",),

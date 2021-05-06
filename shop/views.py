@@ -7,6 +7,7 @@ from bootstrap_modal_forms.generic import (
     BSModalUpdateView,
     BSModalDeleteView,
 )
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import HttpRequest
@@ -14,6 +15,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy, reverse
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
 
 from shop.forms import (
@@ -34,6 +36,7 @@ def _get_user_order(user: User):
     return Order.objects.filter(user=user)
 
 
+@login_required
 def shopping_cart(request: HttpRequest):
     orders = _get_cart_order(request.user)
     open_modal = request.GET.get("open_modal")
@@ -44,6 +47,7 @@ def shopping_cart(request: HttpRequest):
     return render(request, "shop/cart.html", context={"orders": orders})
 
 
+@login_required
 def order_history(request: HttpRequest):
     orders = _get_user_order(request.user)
     status_orders = {
@@ -53,12 +57,14 @@ def order_history(request: HttpRequest):
     return render(request, "shop/history.html", context={"status_orders": status_orders})
 
 
+@method_decorator(login_required, name="dispatch")
 class RecipeRemoveView(BSModalDeleteView):
     success_message = ""
     model = OrderRecipe
     success_url = reverse_lazy("shopping_cart")
 
 
+@method_decorator(login_required, name="dispatch")
 class OrderRecipeCreateView(BSModalCreateView):
     success_message = ""
     success_url = reverse_lazy("shopping_cart")
@@ -71,6 +77,7 @@ class OrderRecipeCreateView(BSModalCreateView):
         return {"recipe": recipe_id, "order": Order.get_cart(self.request.user).id}
 
 
+@method_decorator(login_required, name="dispatch")
 class OrderRecipeSetAmountView(BSModalUpdateView):
     success_message = ""
     model = OrderRecipe
@@ -79,6 +86,7 @@ class OrderRecipeSetAmountView(BSModalUpdateView):
     form_class = OrderRecipeForm
 
 
+@method_decorator(login_required, name="dispatch")
 class OrderUpdateView(BSModalUpdateView):
     success_message = ""
     model = Order
@@ -96,6 +104,7 @@ class OrderUpdateView(BSModalUpdateView):
         return rv
 
 
+@method_decorator(login_required, name="dispatch")
 def create_new_temp_recipe(request: HttpRequest, order, recipe):
     order = OrderRecipe.objects.get(pk=order)
     recipe = Recipe.objects.get(pk=recipe)
@@ -106,6 +115,7 @@ def create_new_temp_recipe(request: HttpRequest, order, recipe):
     return redirect(reverse("shopping_cart") + f"?open_modal={temp_recipe.id}")
 
 
+@method_decorator(login_required, name="dispatch")
 class RecipeUpdateView(BSModalUpdateView):
     # Inspired by https://dev.to/zxenia/django-inline-formsets-with-class-based-views
     # -and-crispy-forms-14o6

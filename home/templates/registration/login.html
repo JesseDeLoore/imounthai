@@ -65,11 +65,11 @@
             <span class="vl-innertext">of</span>
         </div>
         <div class="col-sm-12 col-lg-5">
-            <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}" class="fb btn btn-block"> <i
+            <a href="{% url 'social:begin' 'facebook' %}?next={% if next %}{{ next }}{% else %}{% url "recipe_list" %}{% endif %}" class="fb btn btn-block"> <i
                     class="fa fa-facebook fa-fw"></i> Login met Facebook</a>
-            <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}" class="twitter btn btn-block"> <i
-                    class="fa fa-twitter fa-fw"></i> Login met Twitter</a>
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}" class="google btn btn-block"> <i
+            {% comment %}<a href="{% url 'social:begin' 'twitter' %}?next={% url "recipe_list" %}" class="twitter btn btn-block"> <i
+                    class="fa fa-twitter fa-fw"></i> Login met Twitter</a>{% endcomment %}
+            <a href="{% url 'social:begin' 'google-oauth2' %}?next={% if next %}{{ next }}{% else %}{% url "recipe_list" %}{% endif %}" class="google btn btn-block"> <i
                     class="fa fa-google fa-fw"></i> Login met Google</a>
             {% comment %}<div class="instagram">
                 <a href="{% url 'social:begin' 'instagram-oauth2' %}?next={{ request.path }}" class="instagram btn"> <i
@@ -79,7 +79,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-sm-12 col-lg-5 ">
-            <form method="post" action="{% url 'login' %}">
+            <form method="post" action="{% url 'login' %}?next={% if next %}{{ next }}{% else %}{% url "recipe_list" %}{% endif %}">
                 <div class="form-group">
 
                     {% csrf_token %}
