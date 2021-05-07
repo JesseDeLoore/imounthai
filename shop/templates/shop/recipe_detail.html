@@ -23,7 +23,7 @@
         <p>Voor {% if recipe.base_servings <= 1 %}1 portie{% else %}{{ recipe.base_servings }} porties{% endif %}</p>
           <ul>
             {% for ingredient in recipe.ingredients.all %}
-              <li>{{ ingredient.get_measurement }} {{ ingredient.ingredient }} ({{ ingredient.process_method }})</li>
+              <li>{{ ingredient.get_measurement }} {{ ingredient.ingredient }} {% if ingredient.process_method %}({{ ingredient.process_method }}){% endif %}</li>
             {% endfor %}
           </ul>
         </div>
