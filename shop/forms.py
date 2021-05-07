@@ -34,6 +34,7 @@ RecipeIngredientFormSet = inlineformset_factory(
     form=IngredientForm,
     fields=["ingredient", "amount_mass", "amount_volume"],
     extra=0,
+    min_num=0,
     can_delete=True,
 )
 
@@ -84,11 +85,7 @@ class OrderForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
         self.helper.label_class = "col-md-3 create-label"
         self.helper.field_class = "col-md-9"
         self.helper.layout = Layout(
-            Div(
-                Field("delivery_date"),
-                Field("notes"),
-                ButtonHolder(Submit("submit", "Bestellen")),
-            )
+            Div(Field("delivery_date"), Field("notes"), ButtonHolder(Submit("submit", "Bestellen")),)
         )
 
 
