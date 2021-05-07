@@ -23,8 +23,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-SENTRY_DSN = ""
-SENTRY_SERVER_NAME=""
+SENTRY_DSN = "https://1545c16569bb474ebd4b4103890e0008@o455034.ingest.sentry.io/5754239"
+SENTRY_SERVER_NAME="staging.immuunthai.be"
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
