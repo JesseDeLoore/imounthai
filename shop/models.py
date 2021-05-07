@@ -287,9 +287,19 @@ class IngredientNutrition(Orderable, MeasurementHolder):
     nutrition = models.ForeignKey(Nutrition, on_delete=models.CASCADE)
 
     is_trace_amount = models.BooleanField(default=False)
-    amount_mass = MeasurementField(measurement=Mass, blank=True, null=True)
+    amount_mass = MeasurementField(
+        measurement=Mass,
+        blank=True,
+        null=True,
+        unit_choices=MeasurementHolder.MASS,
+        verbose_name="Massa",
+    )
     amount_volume = MeasurementField(
-        measurement=Volume, blank=True, null=True, unit_choices=MeasurementHolder.VOLUME
+        measurement=Volume,
+        blank=True,
+        null=True,
+        unit_choices=MeasurementHolder.VOLUME,
+        verbose_name="Volume",
     )
 
     def __str__(self):
@@ -302,9 +312,23 @@ class RecipeIngredient(Orderable, MeasurementHolder):
 
     to_taste = models.BooleanField(default=False, blank=True, null=True)
 
-    amount_mass = MeasurementField(measurement=Mass, blank=True, null=True)
-    amount_volume = MeasurementField(measurement=Volume, blank=True, null=True)
-    amount_units = MeasurementField(measurement=MeasureBase, blank=True, null=True)
+    amount_mass = MeasurementField(
+        measurement=Mass,
+        blank=True,
+        null=True,
+        unit_choices=MeasurementHolder.MASS,
+        verbose_name="Massa",
+    )
+    amount_volume = MeasurementField(
+        measurement=Volume,
+        blank=True,
+        null=True,
+        unit_choices=MeasurementHolder.VOLUME,
+        verbose_name="Volume",
+    )
+    amount_units = MeasurementField(
+        measurement=MeasureBase, blank=True, null=True, verbose_name="Aantal"
+    )
 
     process_method = models.ForeignKey(
         ProcessMethod, on_delete=models.SET_NULL, blank=True, null=True
@@ -337,7 +361,10 @@ class RecipeIngredient(Orderable, MeasurementHolder):
     @property
     def amount(self):
         units = self.amount_mass or self.amount_volume or self.amount_units
-        return Decimal(getattr(units, self.ingredient.price_unit)) or 1
+        try:
+            return Decimal(getattr(units, self.ingredient.price_unit)) or 1
+        except AttributeError:
+            return 0
 
     @property
     def unit(self):
