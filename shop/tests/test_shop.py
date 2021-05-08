@@ -47,9 +47,7 @@ def test_recipe_price(basic_order: OrderRecipe):
 def test_recipe_price_with_multiplier(basic_order: OrderRecipe):
     set_prices([("banaan", 2.5), ("kiwi", 3.5), ("appel", 4.5)])
     p = ProcessMethodFactory(
-        name="Schillen",
-        labour_multiplier=1.3,
-        add_to_recipe_ingredients=[("banaan", "Fruitpap")],
+        name="Schillen", labour_multiplier=1.3, add_to_recipe_ingredients=[("banaan", "Fruitpap")],
     )
     # vat * sum(ingredient_amount * price * multipliers)
     price = 1.06 * (1.3 * 2.5 * 0.05 + 3.5 * 0.07 + 4.5 * 0.13)
@@ -75,6 +73,13 @@ def test_next_stage():
     assert order.status == OrderStatus.IN_CART
     order.advance_stage()
     assert order.status == OrderStatus.ORDERED
+
+
+@pytest.mark.django_db
+def test_fixate_order(basic_order: OrderRecipe):
+    basic_order.fixate_recipe()
+    print(basic_order.fixed_recipe)
+    assert len(basic_order.fixed_recipe.split("\n")) == 4
 
 
 # @pytest.mark.django_db

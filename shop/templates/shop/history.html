@@ -8,38 +8,52 @@
 
     </div>
   </div>
-  {% for status, orders in status_orders.items %}
-    <div class="row">
-      <div class="col">
-        <h5>{{ status }}</h5>
-      </div>
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      {% for status, orders in status_orders.items %}
+        {% if orders %}
+          <a class="nav-link tablink" id="nav{{ status }}-tab" data-toggle="tab" href="#nav-{{ status }}" role="tab"
+             aria-controls="nav-{{ status }}" aria-selected="true">{{ status }} ({{ orders|length }})</a>
+        {% else %}
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ status }}</a>
+        {% endif %}
+      {% endfor %}
     </div>
-    {% for order in orders.all %}
-      <div class="row">
-        <div class="col">
-          <b>{{ order.id }}: {{ order.delivery_date.date }} € {{ order.total_price|floatformat:2 }}</b><br/>
-          {% for ord2 in order.ordered_recipes.all %}
-            {{ ord2 }}
-            <button class="btn btn-sm btn-primary text-light float-right has-modal"
-                    data-url="{% url "add_to_cart" ord2.recipe.id %}">Bestel nogmaals
-            </button><br/>
-            <ul>
-              {% for ingredient in ord2.recipe.ingredients.all %}
-                <li>{{ ingredient }}</li>
-
-              {% endfor %}
-            </ul>
-          {% endfor %}
-        </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    {% for status, orders in status_orders.items %}
+      <div class="tab-pane fade" id="nav-{{ status }}" role="tabpanel" aria-labelledby="nav-{{ status }}-tab">
+        {% for order in orders.all %}
+          <div class="row">
+            <div class="col ">
+              <b>{{ order.id }}: {{ order.delivery_date.date }} € {{ order.total_price|floatformat:2 }}</b><br/>
+              <table class="table table-striped">
+                {% for ord2 in order.ordered_recipes.all %}
+                  <tr>
+                    <td>
+                      <pre>{{ ord2.fixed_recipe }}</pre>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-primary text-light float-right has-modal"
+                              data-url="{% url "add_to_cart" ord2.recipe.id %}">Bestel nogmaals
+                      </button>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        {% endfor %}
       </div>
-    {% empty %}
-      <div>-- geen --</div>
     {% endfor %}
+  </div>
 
-
-
-  {% endfor %}
 {% endblock %}
 {% block extra_js %}
   {% include 'modal-js.html' %}
+  <script>
+  $(document).ready(function(){
+      $(".tablink").first().tab("show")
+  });
+  </script>
 {% endblock %}

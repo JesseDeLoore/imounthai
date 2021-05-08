@@ -61,6 +61,7 @@ def order_history(request: HttpRequest):
 class RecipeRemoveView(BSModalDeleteView):
     success_message = ""
     model = OrderRecipe
+    template_name = "shop/modals/orderrecipe_confirm_delete.html"
     success_url = reverse_lazy("shopping_cart")
 
 
@@ -104,12 +105,11 @@ class OrderUpdateView(BSModalUpdateView):
         return rv
 
 
-@method_decorator(login_required, name="dispatch")
+@login_required
 def create_new_temp_recipe(request: HttpRequest, order, recipe):
     order = OrderRecipe.objects.get(pk=order)
     recipe = Recipe.objects.get(pk=recipe)
-    rand_suffix = f"{randrange(16 ** 6):06x}"
-    temp_recipe = recipe.create_temp_copy(f"-{request.user.username}-{rand_suffix}")
+    temp_recipe = recipe.create_temp_copy(request.user.username, f"{randrange(16 ** 6):06x}")
     order.recipe = temp_recipe
     order.save()
     return redirect(reverse("shopping_cart") + f"?open_modal={temp_recipe.id}")
