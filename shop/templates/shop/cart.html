@@ -16,7 +16,7 @@
         </h3>
         {% for recipe in order.ordered_recipes.all %}
           <p>{{ recipe.recipe.name }} <button class="btn btn-outline-primary has-modal" data-url="{% url 'update_order_quant' recipe.id %}">{{ recipe.servings }}</button> Porties
-            {% if recipe.recipe.is_temporary %}
+            {% if recipe.recipe.edit_allowed %}
               <button class=" float-right btn btn-outline-primary has-modal {% if recipe.recipe.id == open_recipe %}open-modal{% endif %}"
                       data-url="{% url 'update_temp_recipe' recipe.recipe.id %}"><i class="fas fa-edit"></i></button>
             {% else %}

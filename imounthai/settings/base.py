@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 SENTRY_DSN = ""
-SENTRY_SERVER_NAME=""
+SENTRY_SERVER_NAME = ""
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,

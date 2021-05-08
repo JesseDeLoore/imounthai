@@ -1,6 +1,7 @@
 from decimal import Decimal
 from itertools import chain
 
+import re
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Model
@@ -105,6 +106,7 @@ class Recipe(ClusterableModel, Orderable):
     is_temporary = models.BooleanField(blank=False, default=False)
     purchase_price = models.DecimalField(max_digits=7, decimal_places=4, default=0, blank=True)
     sell_price = models.DecimalField(max_digits=7, decimal_places=4, default=0, blank=True)
+    base_servings = models.IntegerField(default=1)
 
     def __str__(self):
         if self.description:
@@ -114,8 +116,6 @@ class Recipe(ClusterableModel, Orderable):
     @property
     def vat(self):
         return sum(i.vat for i in self.ingredients.all())
-
-    base_servings = models.IntegerField(default=1)
 
     @property
     def serving_price(self):
@@ -129,12 +129,19 @@ class Recipe(ClusterableModel, Orderable):
     def serving_vat(self):
         return sum(i.vat for i in self.ingredients.all())
 
-    def create_temp_copy(self, suffix="-temp"):
+    @property
+    def edit_allowed(self):
+        return self.is_temporary and self.orders.count() <= 1
+
+    def create_temp_copy(self, suffix_user="unknown", suffix_rand="0" * 6):
         old_ingredients = self.ingredients.all()
         new = Recipe.objects.get(id=self.id)
         new.id = None
         new.is_temporary = True
-        new.name = self.name + suffix
+        if suffix_user in self.name:
+            new.name = "-".join([*self.name.split("-")[:-1], suffix_rand])
+        else:
+            new.name = f"{self.name}-{suffix_user}-{suffix_rand}"
         new.save()
         for i in old_ingredients:
             r = RecipeIngredient(
@@ -150,6 +157,9 @@ class Recipe(ClusterableModel, Orderable):
             r.save()
         new.save()
         return new
+
+    def get_fix_repr(self):
+        return "\n".join((f"€ {i.price_with_vat:.2f}: {i}" for i in self.ingredients.all()))
 
     panels = [
         FieldRowPanel(
@@ -219,13 +229,12 @@ class Order(ClusterableModel, Orderable):
         return self.total_price - self.total_vat
 
     def advance_stage(self):
-        new_status = None
         if self.status == OrderStatus.IN_CART:
-            new_status = OrderStatus.ORDERED
-        if not new_status:
+            self.status = OrderStatus.ORDERED
+            for recipe in self.ordered_recipes.all():
+                recipe.fixate_recipe()
+            self.save()
             return
-        self.status = new_status
-        self.save()
 
     @classmethod
     def get_cart(cls: "Order", user: User):
@@ -383,14 +392,20 @@ class RecipeIngredient(Orderable, MeasurementHolder):
 
 class OrderRecipe(Orderable):
     order = ParentalKey(Order, on_delete=models.CASCADE, related_name="ordered_recipes")
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="orders")
 
     amount_multiplier = models.DecimalField(
         default=1, decimal_places=2, max_digits=10, verbose_name="Aantal"
     )
+    fixed_recipe = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.recipe} - {self.servings} (€ {self.total_price:.2f})"
+
+    def fixate_recipe(self):
+        self.recipe.sell_price = self.recipe.serving_total_price
+        self.fixed_recipe = f"{self}\n{self.recipe.get_fix_repr()}"
+        self.save()
 
     @property
     def servings(self):
