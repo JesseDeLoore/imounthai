@@ -179,7 +179,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 EMAIL_BACKEND = "django_ses.SESBackend"
-
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "imounthai"
