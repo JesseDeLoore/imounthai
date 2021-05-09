@@ -3,6 +3,7 @@ from itertools import chain
 
 import re
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Model
 from django_measurement.models import MeasurementField
@@ -104,9 +105,21 @@ class Recipe(ClusterableModel, Orderable):
     )
 
     is_temporary = models.BooleanField(blank=False, default=False)
-    purchase_price = models.DecimalField(max_digits=7, decimal_places=4, default=0, blank=True)
-    sell_price = models.DecimalField(max_digits=7, decimal_places=4, default=0, blank=True)
-    base_servings = models.IntegerField(default=1)
+    purchase_price = models.DecimalField(
+        max_digits=7,
+        decimal_places=4,
+        default=0,
+        blank=True,
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
+    sell_price = models.DecimalField(
+        max_digits=7,
+        decimal_places=4,
+        default=0,
+        blank=True,
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
+    base_servings = models.IntegerField(default=1, validators=[MinValueValidator(Decimal("0.01"))])
 
     def __str__(self):
         if self.description:
@@ -262,7 +275,9 @@ class Order(ClusterableModel, Orderable):
 class ProcessMethod(Orderable):
     name = models.CharField(max_length=1024)
     description = RichTextField(blank=True)
-    labour_multiplier = models.DecimalField(default=1, decimal_places=4, max_digits=5)
+    labour_multiplier = models.DecimalField(
+        default=1, decimal_places=4, max_digits=5, validators=[MinValueValidator(Decimal("0.01"))]
+    )
 
     def __str__(self):
         return f"{self.name}"
@@ -271,7 +286,9 @@ class ProcessMethod(Orderable):
 class StorageMethod(Orderable):
     name = models.CharField(max_length=1024)
     description = RichTextField(blank=True, default="")
-    labour_multiplier = models.DecimalField(default=1, decimal_places=4, max_digits=5)
+    labour_multiplier = models.DecimalField(
+        default=1, decimal_places=4, max_digits=5, validators=[MinValueValidator(Decimal("0.01"))]
+    )
     conserves_for = MeasurementField(measurement=Time, blank=True, null=True)
 
     def __str__(self):
@@ -284,8 +301,12 @@ class IngredientAllergen(Orderable, MeasurementHolder):
 
     is_dangerous = models.BooleanField(default=False)
     is_trace_amount = models.BooleanField(default=False)
-    amount_mass = MeasurementField(measurement=Mass, blank=True, null=True)
-    amount_volume = MeasurementField(measurement=Volume, blank=True, null=True)
+    amount_mass = MeasurementField(
+        measurement=Mass, blank=True, null=True, validators=[MinValueValidator(0)]
+    )
+    amount_volume = MeasurementField(
+        measurement=Volume, blank=True, null=True, validators=[MinValueValidator(0)]
+    )
 
     def __str__(self):
         return f"{self.ingredient} - {self.allergen} - {self.get_measurement()})"
@@ -302,6 +323,7 @@ class IngredientNutrition(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.MASS,
         verbose_name="Massa",
+        validators=[MinValueValidator(0)],
     )
     amount_volume = MeasurementField(
         measurement=Volume,
@@ -309,6 +331,7 @@ class IngredientNutrition(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.VOLUME,
         verbose_name="Volume",
+        validators=[MinValueValidator(0)],
     )
 
     def __str__(self):
@@ -327,6 +350,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.MASS,
         verbose_name="Massa",
+        validators=[MinValueValidator(0)],
     )
     amount_volume = MeasurementField(
         measurement=Volume,
@@ -334,9 +358,14 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.VOLUME,
         verbose_name="Volume",
+        validators=[MinValueValidator(0)],
     )
     amount_units = MeasurementField(
-        measurement=MeasureBase, blank=True, null=True, verbose_name="Aantal"
+        measurement=MeasureBase,
+        blank=True,
+        null=True,
+        verbose_name="Aantal",
+        validators=[MinValueValidator(0)],
     )
 
     process_method = models.ForeignKey(
@@ -395,11 +424,28 @@ class OrderRecipe(Orderable):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="orders")
 
     amount_multiplier = models.DecimalField(
-        default=1, decimal_places=2, max_digits=10, verbose_name="Aantal"
+        default=1,
+        decimal_places=2,
+        max_digits=10,
+        verbose_name="Aantal",
+        validators=[MinValueValidator(Decimal("0.01"))],
     )
+
     fixed_recipe = models.TextField(null=True, blank=True)
-    sell_price = models.DecimalField(max_digits=10, decimal_places=4, default=0, blank=True)
-    sell_vat = models.DecimalField(max_digits=9, decimal_places=4, default=0, blank=True)
+    sell_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=4,
+        default=0,
+        blank=True,
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
+    sell_vat = models.DecimalField(
+        max_digits=9,
+        decimal_places=4,
+        default=0,
+        blank=True,
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
 
     def __str__(self):
         return f"{self.recipe}\n{self.servings}\n{self.amount_multiplier} x € {self.recipe.serving_total_price:.2f} = € {self.total_price:.2f}"
