@@ -31,7 +31,7 @@ class ShopPreferences(Model):
 
 
 class MeasurementHolder(object):
-    VOLUME = [("ml", "ml"), ("dl", "dl"), ("l", "l"), ("us_tbsp", "tablespoon")]
+    VOLUME = [("ml", "ml"), ("dl", "dl"), ("l", "l"), ("us_tbsp", "eetlepel")]
     MASS = [("g", "g"), ("kg", "kg")]
 
     def get_measurement(self):
@@ -398,13 +398,16 @@ class OrderRecipe(Orderable):
         default=1, decimal_places=2, max_digits=10, verbose_name="Aantal"
     )
     fixed_recipe = models.TextField(null=True, blank=True)
+    sell_price = models.DecimalField(max_digits=10, decimal_places=4, default=0, blank=True)
+    sell_vat = models.DecimalField(max_digits=9, decimal_places=4, default=0, blank=True)
 
     def __str__(self):
-        return f"{self.recipe} - {self.servings} (€ {self.total_price:.2f})"
+        return f"{self.recipe}\n{self.servings}\n{self.amount_multiplier} x € {self.recipe.serving_total_price:.2f} = € {self.total_price:.2f}"
 
     def fixate_recipe(self):
-        self.recipe.sell_price = self.recipe.serving_total_price
-        self.fixed_recipe = f"{self}\n{self.recipe.get_fix_repr()}"
+        self.sell_price = self.total_price
+        self.sell_vat = self.total_vat
+        self.fixed_recipe = f"{self}\n\n{self.recipe.get_fix_repr()}\n----------------------\n€ {self.recipe.serving_total_price:.2f}"
         self.save()
 
     @property
@@ -420,6 +423,8 @@ class OrderRecipe(Orderable):
 
     @property
     def total_price(self):
+        if self.sell_price:
+            return self.sell_price
         return self.serving_price * self.amount_multiplier
 
     @property
@@ -430,13 +435,15 @@ class OrderRecipe(Orderable):
 
     @property
     def total_vat(self):
+        if self.sell_vat:
+            return self.sell_vat
         return self.serving_vat * self.amount_multiplier
 
 
 class OrderCustomLine(Orderable):
     order = ParentalKey(Order, on_delete=models.CASCADE, related_name="custom_lines")
     quantity = models.IntegerField(default=1)
-    unit_price = models.DecimalField(max_digits=7, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=9, decimal_places=2)
     vat_pct = models.DecimalField(max_digits=5, decimal_places=2, default=21)
     description = models.TextField(default="")
 
