@@ -350,7 +350,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.MASS,
         verbose_name="Massa",
-        validators=[MinValueValidator(Mass("Og"))],
+        # validators=[MinValueValidator(Mass(g=0))],
     )
     amount_volume = MeasurementField(
         measurement=Volume,
@@ -358,7 +358,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.VOLUME,
         verbose_name="Volume",
-        validators=[MinValueValidator(Volume("0ml"))],
+        #  validators=[MinValueValidator(Volume(ml=0))],
     )
     amount_units = MeasurementField(
         measurement=MeasureBase,
