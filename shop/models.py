@@ -175,14 +175,8 @@ class Recipe(ClusterableModel, Orderable):
         return "\n".join((f"€ {i.price_with_vat:.2f}: {i}" for i in self.ingredients.all()))
 
     panels = [
-        FieldRowPanel(
-            [
-                FieldPanel("name"),
-                FieldPanel("purchase_price"),
-                FieldPanel("sell_price"),
-                FieldPanel("is_temporary"),
-            ]
-        ),
+        FieldRowPanel([FieldPanel("name"), FieldPanel("is_temporary"), FieldPanel("base_servings"),]),
+        FieldRowPanel([FieldPanel("purchase_price"), FieldPanel("sell_price")]),
         FieldPanel("description"),
         ImageChooserPanel("image"),
         InlinePanel("ingredients", heading="Ingredienten"),
