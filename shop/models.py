@@ -350,7 +350,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.MASS,
         verbose_name="Massa",
-        validators=[MinValueValidator(0)],
+        validators=[MinValueValidator(Mass("Og"))],
     )
     amount_volume = MeasurementField(
         measurement=Volume,
@@ -358,14 +358,14 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.VOLUME,
         verbose_name="Volume",
-        validators=[MinValueValidator(0)],
+        validators=[MinValueValidator(Volumen("0ml"))],
     )
     amount_units = MeasurementField(
         measurement=MeasureBase,
         blank=True,
         null=True,
         verbose_name="Aantal",
-        validators=[MinValueValidator(0)],
+        #validators=[MinValueValidator(MeasureBase(0))],
     )
 
     process_method = models.ForeignKey(
