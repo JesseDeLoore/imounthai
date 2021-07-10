@@ -10,7 +10,7 @@ import measurement.measures.volume
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("shop", "0009_auto_20210509_0848"),
+        ("shop", "0010_auto_20210606_1458"),
     ]
 
     operations = [
