@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from bootstrap_modal_forms.forms import BSModalModelForm
 from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Field, Fieldset, ButtonHolder, Submit
@@ -57,12 +58,12 @@ class TemporaryRecipeForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelFor
                 Field("base_servings", type="hidden"),
                 Field("is_temporary", type="hidden"),
                 Fieldset("Ingredienten", Formset("ingredients")),
-                ButtonHolder(Submit("submit", "Opslaan")),
+                ButtonHolder(Submit("opslaan", "Opslaan")),
             )
         )
 
 
-class OrderForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
+class OrderForm(BSModalModelForm):
     class Meta:
         model = Order
         fields = ["notes", "delivery_date"]
@@ -85,11 +86,15 @@ class OrderForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
         self.helper.label_class = "col-md-3 create-label"
         self.helper.field_class = "col-md-9"
         self.helper.layout = Layout(
-            Div(Field("delivery_date"), Field("notes"), ButtonHolder(Submit("submit", "Bestellen")),)
+            Div(
+                Field("delivery_date"),
+                Field("notes"),
+                ButtonHolder(Submit("bestellen", "Bestellen")),
+            )
         )
 
 
-class OrderRecipeForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
+class OrderRecipeForm(BSModalModelForm):
     class Meta:
         model = OrderRecipe
         fields = [
@@ -104,11 +109,11 @@ class OrderRecipeForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
         self.helper.label_class = "col-md-3 create-label"
         self.helper.field_class = "col-md-9"
         self.helper.layout = Layout(
-            Div(Field("amount_multiplier"), ButtonHolder(Submit("submit", "Opslaan")),)
+            Div(Field("amount_multiplier"), ButtonHolder(Submit("opslaan", "Opslaan")),)
         )
 
 
-class OrderRecipeCreateForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
+class OrderRecipeCreateForm(BSModalModelForm):
     class Meta:
         model = OrderRecipe
         fields = [
@@ -129,6 +134,6 @@ class OrderRecipeCreateForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelF
                 Field("recipe", type="hidden"),
                 Field("order", type="hidden"),
                 Field("amount_multiplier"),
-                ButtonHolder(Submit("submit", "Opslaan")),
+                ButtonHolder(Submit("opslaan", "Opslaan")),
             )
         )
