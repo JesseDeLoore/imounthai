@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load wagtailimages_tags %}
 {% load wagtailcore_tags %}
+{% image recipe.image  fill-500x266-c100 as tmp_img %}
+{% block og_tags %}
+  <meta property="og:title" content="Immuunthai - {{ recipe.name }}" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="{{ recipe.description|richtext }}"/>
+<meta property="og:image" content="{{ recipe.image.file.url }}" />
+{% endblock %}
 {% block content %}
   <div class="row">
     <div class="col">

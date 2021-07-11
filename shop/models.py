@@ -122,8 +122,6 @@ class Recipe(ClusterableModel, Orderable):
     base_servings = models.IntegerField(default=1, validators=[MinValueValidator(Decimal("0.01"))])
 
     def __str__(self):
-        if self.description:
-            return f"{self.name} ({short(self.description)})"
         return self.name
 
     @property
@@ -333,7 +331,7 @@ class IngredientNutrition(Orderable, MeasurementHolder):
 
 
 class RecipeIngredient(Orderable, MeasurementHolder):
-    recipe = ParentalKey(Recipe, on_delete=models.CASCADE, related_name="ingredients")
+    recipe = ParentalKey(Recipe, on_delete=models.CASCADE, related_name="ingredients",)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
 
     to_taste = models.BooleanField(default=False, blank=True, null=True)

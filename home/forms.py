@@ -65,5 +65,5 @@ class UpdateProfileForm(ModelForm):
             Field("email"),
             Field("first_name"),
             Field("last_name"),
-            FormActions(Submit("submit", "Opslaan")),
+            FormActions(Submit("opslaan", "Opslaan")),
         )

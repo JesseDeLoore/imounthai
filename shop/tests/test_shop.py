@@ -68,6 +68,14 @@ def test_recipe_price_with_multiplier(basic_order: OrderRecipe):
 
 
 @pytest.mark.django_db
+def test_vat_on_order(basic_order: OrderRecipe):
+    set_prices([("banaan", 2.5), ("kiwi", 3.5), ("appel", 4.5)])
+    basic_order.amount_multiplier = 100
+    vat = 0.06 * (2.5 * 0.05 + 3.5 * 0.07 + 4.5 * 0.13)
+    assert pytest.approx(float(basic_order.total_vat), 1e-6) == vat * 100
+
+
+@pytest.mark.django_db
 def test_next_stage():
     order = OrderFactory()
     assert order.status == OrderStatus.IN_CART
@@ -82,29 +90,28 @@ def test_fixate_order(basic_order: OrderRecipe):
     assert len(basic_order.fixed_recipe.split("\n")) == 4
 
 
-# @pytest.mark.django_db
-# def test_confirm_order():
-#     user = UserFactory()
-#     order = OrderFactory(user_id=user.id)
-#     assert order.status == OrderStatus.IN_CART
-#     c = Client()
-#     delivery = datetime(2021, 5, 17)
-#     delivery_str = delivery.strftime("%Y-%m-%d")
-#     notes = "These are notes"
-#     c.post("/login", data={"username": user.username, "password": user.password})
-#     r = c.post(
-#         f"/order/confirm_order/{order.id}",
-#         data={"delivery_date": delivery_str, "notes": notes},
-#     )
-#     order.refresh_from_db()
-#     assert order.status == OrderStatus.IN_CART
-#     assert order.delivery_date == delivery
-#     assert order.notes == notes
-#     c.post(
-#         f"/order/confirm_order/{order.id}?advance_stage=1",
-#         data={"delivery_date": delivery_str, "notes": notes},
-#     )
-#     order.refresh_from_db()
-#     assert order.status == OrderStatus.IN_CART
-#     assert order.delivery_date == delivery
-#     assert order.notes == notes
+@pytest.mark.django_db
+def test_confirm_order():
+    user = UserFactory()
+    order = OrderFactory(user_id=user.id)
+    assert order.status == OrderStatus.IN_CART
+    c = Client()
+    delivery = datetime(2021, 5, 17)
+    delivery_str = delivery.strftime("%Y-%m-%d")
+    notes = "These are notes"
+    c.post("/login", data={"username": user.username, "password": user.password})
+    r = c.post(
+        f"/order/confirm_order/{order.id}", data={"delivery_date": delivery_str, "notes": notes},
+    )
+    order.refresh_from_db()
+    assert order.status == OrderStatus.IN_CART
+    assert order.delivery_date == delivery
+    assert order.notes == notes
+    c.post(
+        f"/order/confirm_order/{order.id}?advance_stage=1",
+        data={"delivery_date": delivery_str, "notes": notes},
+    )
+    order.refresh_from_db()
+    assert order.status == OrderStatus.IN_CART
+    assert order.delivery_date == delivery
+    assert order.notes == notes
