@@ -70,11 +70,14 @@ class Ingredient(ClusterableModel, Orderable):
     sell_price = models.DecimalField(max_digits=7, decimal_places=4, blank=True, null=True)
     price_unit = models.CharField(
         max_length=35, choices=[("g", "g"), ("kg", "kg"), ("l", "l"), ("ml", "ml"), (None, "")],
-    )
+    blank=True)
     vat_pct = models.DecimalField(max_digits=5, decimal_places=2, default=6)
 
     def __str__(self):
         return f"{self.name}"
+
+    class Meta:
+        ordering = ["name"]
 
     @property
     def price_with_vat(self):
