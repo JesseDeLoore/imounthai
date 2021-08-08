@@ -345,7 +345,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.MASS,
         verbose_name="Massa",
-        # validators=[MinValueValidator(Mass(g=0))],
+        validators=[MinValueValidator(Mass(g=0))],
     )
     amount_volume = MeasurementField(
         measurement=Volume,
@@ -353,14 +353,13 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.VOLUME,
         verbose_name="Volume",
-        #  validators=[MinValueValidator(Volume(ml=0))],
+        validators=[MinValueValidator(Volume(ml=0))],
     )
-    amount_units = MeasurementField(
-        measurement=MeasureBase,
+    amount_units = models.IntegerField(
         blank=True,
         null=True,
         verbose_name="Aantal",
-        # validators=[MinValueValidator(MeasureBase(0))],
+        validators=[MinValueValidator(0)],
     )
 
     process_method = models.ForeignKey(
@@ -393,7 +392,10 @@ class RecipeIngredient(Orderable, MeasurementHolder):
 
     @property
     def amount(self):
-        units = self.amount_mass or self.amount_volume or self.amount_units
+        if self.amount_units:
+            return Decimal(self.amount_units)
+        units = self.amount_mass or self.amount_volume
+
         try:
             return Decimal(getattr(units, self.ingredient.price_unit)) or 1
         except AttributeError:
@@ -401,7 +403,9 @@ class RecipeIngredient(Orderable, MeasurementHolder):
 
     @property
     def unit(self):
-        units = self.amount_mass or self.amount_volume or self.amount_units
+        if self.amount_units:
+            return "stuks"
+        units = self.amount_mass or self.amount_volume
         return units.STANDARD_UNIT
 
     @property
