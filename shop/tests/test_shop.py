@@ -66,6 +66,16 @@ def test_recipe_price_with_multiplier(basic_order: OrderRecipe):
     )
     assert pytest.approx(float(basic_order.total_price), 1e-6) == price
 
+@pytest.mark.django_db
+def test_single_unit_ingredient(basic_order):
+    set_prices([("banaan", 2.5), ("kiwi", 0), ("appel",0)])
+    ing_0 = basic_order.recipe.ingredients.all()[0]
+    ing_0.amount_mass = 0
+    ing_0.amount_units = 10
+    ing_0.ingredient.price_unit = None
+    ing_0.save()
+    assert pytest.approx(float(basic_order.total_price), 1e-3) == 25.0 * 1.06
+
 
 @pytest.mark.django_db
 def test_vat_on_order(basic_order: OrderRecipe):

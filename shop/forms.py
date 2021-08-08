@@ -40,6 +40,7 @@ RecipeIngredientFormSet = inlineformset_factory(
 )
 
 
+
 class TemporaryRecipeForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
     class Meta:
         model = Recipe
@@ -109,7 +110,7 @@ class OrderRecipeForm(BSModalModelForm):
         self.helper.label_class = "col-md-3 create-label"
         self.helper.field_class = "col-md-9"
         self.helper.layout = Layout(
-            Div(Field("amount_multiplier"), ButtonHolder(Submit("opslaan", "Opslaan")),)
+            Div(Field("amount_multiplier", step=0.25), ButtonHolder(Submit("opslaan", "Opslaan")),)
         )
 
 
@@ -133,7 +134,7 @@ class OrderRecipeCreateForm(BSModalModelForm):
             Div(
                 Field("recipe", type="hidden"),
                 Field("order", type="hidden"),
-                Field("amount_multiplier"),
+                Field("amount_multiplier", step=0.25),
                 ButtonHolder(Submit("opslaan", "Opslaan")),
             )
         )
