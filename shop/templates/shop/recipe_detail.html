@@ -5,7 +5,7 @@
 {% block og_tags %}
   <meta property="og:title" content="Immuunthai - {{ recipe.name }}" />
 <meta property="og:type" content="website" />
-<meta property="og:description" content="{{ recipe.description|richtext }}"/>
+<meta property="og:description" content="{{ recipe.description|striptags }}"/>
 <meta property="og:image" content="{{ recipe.image.file.url }}" />
 {% endblock %}
 {% block content %}
