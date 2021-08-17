@@ -32,24 +32,18 @@
             <tr>
               <th>Ingredient</th>
               <th>Prijs</th>
-              <th>Totaal</th>
             </tr>
             {% for ingredient in recipe.recipe.ingredients.all %}
               <tr>
                 <td width="auto">{{ ingredient }}</td>
-                <td>&euro; {{ ingredient.ingredient.price_with_vat | floatformat:2 }}
-                  / {{ ingredient.ingredient.price_unit }}</td>
                 <td>&euro; {{ ingredient.price_with_vat | floatformat:2 }}</td>
               </tr>
             {% endfor %}
             <tr>
-              <td></td>
               <th>Totaal 1 x gerecht</th>
               <td>&euro; {{ recipe.serving_price |floatformat:2 }}</td>
             </tr>
             <tr>
-              <td>
-              </td>
               <th>Totaal ( x {{ recipe.amount_multiplier }})</th>
               <td>&euro; {{ recipe.total_price | floatformat:2 }}</td>
             </tr>
