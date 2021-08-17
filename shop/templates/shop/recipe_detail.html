@@ -18,10 +18,10 @@
   </div>
   <div class="row">
 
-    <div class="col-6">
+    <div class="col-md-12 col-lg-6">
       <div class="row">
         <div class="col">
-          {% image recipe.image fill-500x266-c100 alt="Recipe Image" %}
+          {% image recipe.image fill-500x266-c100 alt="Recipe Image" class="img-fluid" %}
         </div>
       </div>
       <div class="row">
@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-    <div class="col-6">{{ recipe.description|richtext }}</div>
+    <div class="col-md-12 col-lg-6">{{ recipe.description|richtext }}</div>
   </div>
 
 {% endblock %}
