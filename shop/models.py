@@ -72,6 +72,7 @@ class Ingredient(ClusterableModel, Orderable):
         max_length=35, choices=[("g", "g"), ("kg", "kg"), ("l", "l"), ("ml", "ml"), (None, "")],
     blank=True)
     vat_pct = models.DecimalField(max_digits=5, decimal_places=2, default=6)
+    is_available = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -91,6 +92,7 @@ class Ingredient(ClusterableModel, Orderable):
                 FieldPanel("sell_price"),
                 FieldPanel("price_unit"),
                 FieldPanel("vat_pct"),
+                FieldPanel("is_available"),
             ]
         ),
         FieldPanel("description"),
@@ -146,6 +148,10 @@ class Recipe(ClusterableModel, Orderable):
     @property
     def edit_allowed(self):
         return self.is_temporary and self.orders.count() <= 1
+
+    @property
+    def is_available(self):
+        return all(i.ingredient.is_available for i in self.ingredients.all())
 
     def create_temp_copy(self, suffix_user="unknown", suffix_rand="0" * 6):
         old_ingredients = self.ingredients.all()
@@ -243,6 +249,10 @@ class Order(ClusterableModel, Orderable):
                 recipe.fixate_recipe()
             self.save()
             return
+
+    @property
+    def is_available(self):
+        return all(r.recipe.is_available for r in self.ordered_recipes.all())
 
     @classmethod
     def get_cart(cls: "Order", user: User):
@@ -345,7 +355,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.MASS,
         verbose_name="Massa",
-        validators=[MinValueValidator(Mass(g=0))],
+        #validators=[MinValueValidator(Mass(g=0))],
     )
     amount_volume = MeasurementField(
         measurement=Volume,
@@ -353,7 +363,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
         null=True,
         unit_choices=MeasurementHolder.VOLUME,
         verbose_name="Volume",
-        validators=[MinValueValidator(Volume(ml=0))],
+        #validators=[MinValueValidator(Volume(ml=0))],
     )
     amount_units = models.IntegerField(
         blank=True,
