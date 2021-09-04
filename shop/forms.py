@@ -10,7 +10,7 @@ from django.forms import inlineformset_factory
 from django.forms.widgets import DateInput
 
 from home.utils import Formset
-from shop.models import Recipe, RecipeIngredient, OrderRecipe, Order
+from shop.models import Recipe, RecipeIngredient, OrderRecipe, Order, Ingredient
 
 
 def next_delivery_day():
@@ -26,19 +26,30 @@ def next_delivery_day():
 class IngredientForm(forms.ModelForm):
     class Meta:
         model = RecipeIngredient
-        fields = ("ingredient", "amount_mass", "amount_volume")
+        fields = ("ingredient", "amount_units", "amount_mass", "amount_volume")
+
+    def __init__(self, *args, **kwargs):
+        super(IngredientForm, self).__init__(*args, **kwargs)
+        self.fields["ingredient"].queryset = Ingredient.objects.filter(is_available=True)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        if self.instance.ingredient.price_unit is not None:
+            self.fields.pop("amount_units")
+        if self.instance.ingredient.price_unit not in ("g", "kg"):
+            self.fields.pop("amount_mass")
+        if self.instance.ingredient.price_unit not in ("l", "ml"):
+            self.fields.pop("amount_volume")
 
 
 RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
     RecipeIngredient,
     form=IngredientForm,
-    fields=["ingredient", "amount_mass", "amount_volume"],
+    #fields=["ingredient", "amount_mass", "amount_volume", "amount_units"],
     extra=0,
     min_num=0,
     can_delete=True,
 )
-
 
 
 class TemporaryRecipeForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
@@ -58,7 +69,7 @@ class TemporaryRecipeForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelFor
                 Field("name", readonly=True),
                 Field("base_servings", type="hidden"),
                 Field("is_temporary", type="hidden"),
-                Fieldset("Ingredienten", Formset("ingredients")),
+                Fieldset("Ingredienten", Formset("ingredients", template="bootstrap/table_inline_formset.html")),
                 ButtonHolder(Submit("opslaan", "Opslaan")),
             )
         )

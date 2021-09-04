@@ -11,8 +11,12 @@
     <div class="row">
       <div class="col">
         <h3>Bestelling # {{ forloop.counter }}
+          {% if order.is_available %}
           <button class="float-right btn btn-outline-primary has-modal" data-url="{% url 'confirm_order' order.id %}?advance_stage=1">Bestel!
           </button>
+          {% else %}
+          <span class="bg-warning">Eén of meerdere ingredienten zijn niet beschikbaar</span>
+          {% endif %}
         </h3>
         {% for recipe in order.ordered_recipes.all %}
           <p>{{ recipe.recipe.name }} <button class="btn btn-outline-primary has-modal" data-url="{% url 'update_order_quant' recipe.id %}">{{ recipe.servings }}</button> Porties
@@ -35,7 +39,8 @@
             </tr>
             {% for ingredient in recipe.recipe.ingredients.all %}
               <tr>
-                <td width="auto">{{ ingredient }}</td>
+                <td width="auto" class="{% if not ingredient.ingredient.is_available %}bg-warning{% endif %}">
+                  {{ ingredient }}</td>
                 <td>&euro; {{ ingredient.price_with_vat | floatformat:2 }}</td>
               </tr>
             {% endfor %}
