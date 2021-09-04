@@ -10,7 +10,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-12">
+        <div class="col-8 col-sm-12">
             <div id="mainCarousel" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {% for carousel_item in page.carousel_items.all %}
@@ -40,17 +40,10 @@
                 </a>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-
-            {{ page.intro|richtext }}
-        </div>
-    </div>
-
-    <div class="row">
+      <div class="col-4 col-sm-12">
+        <div class="row">
         {% for carousel_item in page.carousel_items.all %}
-            <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-6 col-xs-12">
                 <div class="card" style="margin-bottom: 1.5em">
                     {% image carousel_item.image fill-350x186-c100 alt="Card Image" class="card-img-top" %}
                     <div class="card-body">
@@ -70,4 +63,14 @@
             </div>
         {% endfor %}
     </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col">
+
+            {{ page.intro|richtext }}
+        </div>
+    </div>
+
+
 {% endblock content %}
