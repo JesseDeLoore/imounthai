@@ -14,7 +14,7 @@ class UserAccountCreateView(BSModalCreateView):
     template_name = "registration/create_user_account.html"
     form_class = UserAccountCreateForm
     success_message = ""
-    success_url = "/"
+    success_url = "/login"
 
 
 @method_decorator(login_required, name="dispatch")

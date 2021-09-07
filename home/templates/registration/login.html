@@ -47,15 +47,14 @@
     <div class="row">
         <div class="col">
             {% if form.errors %}
-                <p>Your username and password didn't match. Please try again.</p>
+                <p>Ongekende combinatie voor gebruikersnaam en wachtwoord.</p>
             {% endif %}
 
             {% if next %}
                 {% if user.is_authenticated %}
-                    <p>Your account doesn't have access to this page. To proceed,
-                        please login with an account that has access.</p>
+                    <p>Deze account heeft geen toegang tot die pagina. Log in met een account met de juiste rechten</p>
                 {% else %}
-                    <p>Please login to see this page.</p>
+                    <p>Gelieve in te loggen om deze pagina te zien</p>
                 {% endif %}
             {% endif %}
         </div>
@@ -65,11 +64,11 @@
             <span class="vl-innertext">of</span>
         </div>
         <div class="col-sm-12 col-lg-5">
-            <a href="{% url 'social:begin' 'facebook' %}?next={% if next %}{{ next }}{% else %}{% url "recipe_list" %}{% endif %}" class="fb btn btn-block"> <i
+            <a href="{% url 'social:begin' 'facebook' %}?next={% if next %}{{ next }}{% else %}{% url 'recipe_list' %}{% endif %}" class="fb btn btn-block"> <i
                     class="fa fa-facebook fa-fw"></i> Login met Facebook</a>
-            {% comment %}<a href="{% url 'social:begin' 'twitter' %}?next={% url "recipe_list" %}" class="twitter btn btn-block"> <i
+            {% comment %}<a href="{% url 'social:begin' 'twitter' %}?next={% url 'recipe_list' %}" class="twitter btn btn-block"> <i
                     class="fa fa-twitter fa-fw"></i> Login met Twitter</a>{% endcomment %}
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next={% if next %}{{ next }}{% else %}{% url "recipe_list" %}{% endif %}" class="google btn btn-block"> <i
+            <a href="{% url 'social:begin' 'google-oauth2' %}?next={% if next %}{{ next }}{% else %}{% url 'recipe_list' %}{% endif %}" class="google btn btn-block"> <i
                     class="fa fa-google fa-fw"></i> Login met Google</a>
             {% comment %}<div class="instagram">
                 <a href="{% url 'social:begin' 'instagram-oauth2' %}?next={{ request.path }}" class="instagram btn"> <i
@@ -79,7 +78,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-sm-12 col-lg-5 ">
-            <form method="post" action="{% url 'login' %}?next={% if next %}{{ next }}{% else %}{% url "recipe_list" %}{% endif %}">
+            <form method="post" action="{% url 'login' %}?next={% if next %}{{ next }}{% else %}{% url 'recipe_list' %}{% endif %}">
                 <div class="form-group">
 
                     {% csrf_token %}
@@ -104,7 +103,7 @@
                 ?</a>
         </div>
     </div>
- <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendMeasurementModal" aria-hidden="true"
+ <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createAccountModal" aria-hidden="true"
          id="modal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -121,7 +120,7 @@
         $(document).ready(function () {
             $("#create-account").modalForm({
                 formURL: "{% url 'create_account' %}",
-                errorClass: ".invalid",
+                errorClass: ".errorlist, .invalid, .is-invalid, .invalid-feedback",
             });
 
         });

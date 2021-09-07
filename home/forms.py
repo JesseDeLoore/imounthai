@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from bootstrap_modal_forms.utils import is_ajax
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Field, ButtonHolder, Submit
@@ -7,21 +8,32 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
-from django.forms import HiddenInput, CharField, ModelForm, EmailField
+from django.forms import HiddenInput, CharField, ModelForm, EmailField, PasswordInput
 from verify_email.email_handler import send_verification_email
 
 
 class UserAccountCreateForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm):
-    username = CharField(label=_("Email"))
+    username = EmailField(label=_("Email"))
+    first_name = CharField(label=_("Voornaam"))
+    last_name = CharField(label=_("Achternaam"))
+    password1 = CharField(label=_("Wacthwoord"), widget=PasswordInput)
+    password2 = CharField(label=_("Wacthwoord ter controle"), widget=PasswordInput)
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "password1", "password2", "username"]
-        widgets = {"username": HiddenInput()}
+        fields = ["first_name", "last_name", "password1", "password2", "username", "email"]
+        widgets = {"email": HiddenInput()}
 
-    def is_valid(self):
-        if super().is_valid():
-            inactive_user = send_verification_email(self.request, self)
+    def save(self, commit=True):
+        if commit and not is_ajax(self.request.META):
+            return send_verification_email(self.request, self)
+
+        return super(UserAccountCreateForm, self).save(commit)
+
+    def clean(self):
+        super().clean()
+        self.cleaned_data["email"] = self.cleaned_data.get("username")
+        return self.cleaned_data
 
 
 class UpdateProfileForm(ModelForm):
@@ -40,7 +52,7 @@ class UpdateProfileForm(ModelForm):
 
         if email and User.objects.filter(email=email).exclude(username=username).count():
             raise ValidationError(
-                "This email address is already in use. " "Please supply a different email address."
+                "This email address is already in use. Please supply a different email address."
             )
         return email
 
