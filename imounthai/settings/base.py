@@ -39,6 +39,8 @@ if SENTRY_DSN:
         send_default_pii=True,
     )
 
+DEFAULT_HASHING_ALGORITHM = "sha256"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -217,7 +219,8 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
     },
 }
 
-WAGTAIL_FRONTEND_LOGIN_URL = "/accounts/login/"
+WAGTAIL_FRONTEND_LOGIN_URL = "login/"
+LOGIN_URL = "login"
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 SOCIAL_AUTH_STRATEGY = "social_django.strategy.DjangoStrategy"
 SOCIAL_AUTH_STORAGE = "social_django.models.DjangoStorage"

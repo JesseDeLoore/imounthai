@@ -15,12 +15,12 @@ from shop.models import Recipe, RecipeIngredient, OrderRecipe, Order, Ingredient
 
 def next_delivery_day():
     now = datetime.datetime.now()
-    # Before saturday
-    if now.weekday() < 4:
-        # return next week monday
-        return (now - datetime.timedelta(days=now.weekday() - 7)).date()
-    # return monday after that
-    return (now - datetime.timedelta(days=now.weekday() - 14)).date()
+    # Before tuesday
+    if now.weekday() < 1:
+        # return this week friday
+        return (now + datetime.timedelta(days=4 - now.weekday() )).date()
+    # return next week tuesday
+    return (now + datetime.timedelta(days=8 - now.weekday())).date()
 
 
 class IngredientForm(forms.ModelForm):
@@ -85,7 +85,7 @@ class OrderForm(BSModalModelForm):
                     "type": "date",
                     "min": next_delivery_day(),
                     "max": next_delivery_day() + datetime.timedelta(days=7 * 6),
-                    "step": "7",
+                    "step": "3.5",
                 }
             )
         }

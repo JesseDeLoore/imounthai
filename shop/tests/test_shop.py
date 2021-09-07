@@ -4,6 +4,7 @@ from datetime import datetime
 import pytest
 from django.test import Client
 
+from shop.forms import next_delivery_day
 from shop.models import Ingredient, OrderRecipe, OrderStatus
 from shop.tests.conftest import set_prices
 from shop.tests.factories.shop_factories import (
@@ -125,3 +126,13 @@ def test_confirm_order():
     assert order.status == OrderStatus.IN_CART
     assert order.delivery_date == delivery
     assert order.notes == notes
+
+
+@pytest.mark.parametrize("inp,out",[
+    (datetime(2021,9, 6), datetime(2021,9, 10)),
+    (datetime(2021,9, 8), datetime(2021,9, 14)),
+
+])
+def test_next_delivery_date(freezer, inp, out):
+    freezer.move_to(inp)
+    assert next_delivery_day() == out
