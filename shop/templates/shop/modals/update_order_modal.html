@@ -1,13 +1,28 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container">
-    <div class="card">
-        <div class="card-header">
-            Bevestig bestelling!
-        </div>
-        <div class="card-body">
-             {% crispy form %}
-        </div>
+  <div class="card">
+    <div class="card-header">
+      Bevestig bestelling!
     </div>
+    <div class="card-body">
+      {% crispy form %}
+    </div>
+  </div>
 </div>
+<script>
+  function hide_days(d) {
+    return [$("#delivery-date").data("excluded").indexOf(d.getDay().toString()) < 0, "",""]
+  }
+
+  $(document).ready(function () {
+        let el = $("#delivery-date");
+        $("#delivery-date").datepicker({
+          beforeShowDay: hide_days,
+          minDate: new Date(el.attr("min")),
+          maxDate:
+              new Date(el.attr("max"))})
+      }
+  )
+</script>
 {% endblock content %}

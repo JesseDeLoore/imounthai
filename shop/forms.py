@@ -6,8 +6,8 @@ from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Field, Fieldset, ButtonHolder, Submit
 from django import forms
-from django.forms import inlineformset_factory
-from django.forms.widgets import DateInput
+from django.forms import inlineformset_factory, TextInput
+
 
 from home.utils import Formset
 from shop.models import Recipe, RecipeIngredient, OrderRecipe, Order, Ingredient
@@ -80,15 +80,16 @@ class OrderForm(BSModalModelForm):
         model = Order
         fields = ["notes", "delivery_date"]
         widgets = {
-            "delivery_date": DateInput(
+            "delivery_date": TextInput(
                 attrs={
-                    "type": "date",
-                    "min": next_delivery_day(),
-                    "max": next_delivery_day() + datetime.timedelta(days=7 * 6),
-                    "step": "3.5",
-                }
-            )
-        }
+                    "type": "text",
+                    "min": next_delivery_day().strftime("%Y-%m-%d"),
+                    "max": (next_delivery_day() + datetime.timedelta(days=7 * 6)).strftime("%Y-%m-%d"),
+                    "data-excluded": "0,1,3,4,6", # this is sunday 0 because of JS standard
+                    "id": "delivery-date"
+                })}
+
+
 
     def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
