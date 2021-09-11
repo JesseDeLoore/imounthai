@@ -1,15 +1,33 @@
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            Gerecht Aanpassen
-        </div>
-        <div class="card-body">
+<style>
+  @media (max-width: 960px) {
 
-             {% crispy form %}
-        </div>
+    .controls .select.form-control {
+      width: 175px;
+    }
+    table.table th.control-group, table.table td.control-group{
+      padding: 0.25em;
+    }
+    div.container.in-modal {
+      padding: 0;
+    }
 
+  }
+  .controls .numberinput{
+    width: 3.5em;
+  }
+</style>
+<div class="container in-modal">
+  <div class="card">
+    <div class="card-header">
+      Gerecht Aanpassen
     </div>
+    <div class="card-body">
+
+      {% crispy form %}
+    </div>
+
+  </div>
 </div>
 {% endblock content %}
