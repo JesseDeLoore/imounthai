@@ -203,7 +203,7 @@ class OrderStatus(models.TextChoices):
 class Order(ClusterableModel, Orderable):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=2, choices=OrderStatus.choices, default=OrderStatus.IN_CART)
     delivery_date = models.DateTimeField(null=True, blank=True)
     cancelled = models.BooleanField(default=False)
@@ -302,7 +302,7 @@ class StorageMethod(Orderable):
 
 class IngredientAllergen(Orderable, MeasurementHolder):
     ingredient = ParentalKey(Ingredient, on_delete=models.CASCADE, related_name="allergens")
-    allergen = models.ForeignKey(Allergen, on_delete=models.CASCADE)
+    allergen = models.ForeignKey(Allergen, on_delete=models.PROTECT)
 
     is_dangerous = models.BooleanField(default=False)
     is_trace_amount = models.BooleanField(default=False)
@@ -319,7 +319,7 @@ class IngredientAllergen(Orderable, MeasurementHolder):
 
 class IngredientNutrition(Orderable, MeasurementHolder):
     ingredient = ParentalKey(Ingredient, on_delete=models.CASCADE, related_name="nutrients")
-    nutrition = models.ForeignKey(Nutrition, on_delete=models.CASCADE)
+    nutrition = models.ForeignKey(Nutrition, on_delete=models.PROTECT)
 
     is_trace_amount = models.BooleanField(default=False)
     amount_mass = MeasurementField(
@@ -345,7 +345,7 @@ class IngredientNutrition(Orderable, MeasurementHolder):
 
 class RecipeIngredient(Orderable, MeasurementHolder):
     recipe = ParentalKey(Recipe, on_delete=models.CASCADE, related_name="ingredients",)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.PROTECT)
 
     to_taste = models.BooleanField(default=False, blank=True, null=True)
 
@@ -373,10 +373,10 @@ class RecipeIngredient(Orderable, MeasurementHolder):
     )
 
     process_method = models.ForeignKey(
-        ProcessMethod, on_delete=models.SET_NULL, blank=True, null=True
+        ProcessMethod, on_delete=models.PROTECT, blank=True, null=True
     )
     storage_method = models.ForeignKey(
-        StorageMethod, on_delete=models.SET_NULL, blank=True, null=True
+        StorageMethod, on_delete=models.PROTECT, blank=True, null=True
     )
 
     def __str__(self):
@@ -430,7 +430,7 @@ class RecipeIngredient(Orderable, MeasurementHolder):
 
 class OrderRecipe(Orderable):
     order = ParentalKey(Order, on_delete=models.CASCADE, related_name="ordered_recipes")
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="orders")
+    recipe = models.ForeignKey(Recipe, on_delete=models.PROTECT, related_name="orders")
 
     amount_multiplier = models.DecimalField(
         default=1,
