@@ -8,7 +8,6 @@ from crispy_forms.layout import Layout, Div, Field, Fieldset, ButtonHolder, Subm
 from django import forms
 from django.forms import inlineformset_factory, TextInput
 
-
 from home.utils import Formset
 from shop.models import Recipe, RecipeIngredient, OrderRecipe, Order, Ingredient
 
@@ -18,7 +17,7 @@ def next_delivery_day():
     # Before tuesday
     if now.weekday() < 1:
         # return this week friday
-        return (now + datetime.timedelta(days=4 - now.weekday() )).date()
+        return (now + datetime.timedelta(days=4 - now.weekday())).date()
     # return next week tuesday
     return (now + datetime.timedelta(days=8 - now.weekday())).date()
 
@@ -47,7 +46,7 @@ RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
     RecipeIngredient,
     form=IngredientForm,
-    #fields=["ingredient", "amount_mass", "amount_volume", "amount_units"],
+    # fields=["ingredient", "amount_mass", "amount_volume", "amount_units"],
     extra=0,
     min_num=0,
     can_delete=True,
@@ -87,14 +86,14 @@ class OrderForm(BSModalModelForm):
                     "type": "text",
                     "min": next_delivery_day().strftime("%Y-%m-%d"),
                     "max": (next_delivery_day() + datetime.timedelta(days=7 * 6)).strftime("%Y-%m-%d"),
-                    "data-excluded": "0,1,3,4,6", # this is sunday 0 because of JS standard
+                    "data-excluded": "0,1,3,4,6",  # this is sunday 0 because of JS standard
                     "id": "delivery-date"
                 })}
 
-
-
     def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
+        self.fields["delivery_date"].widget.attrs["min"] = next_delivery_day().strftime("%Y-%m-%d")
+        self.fields["delivery_date"].widget.attrs["max"] = (next_delivery_day() + datetime.timedelta(days=7 * 6)).strftime("%Y-%m-%d")
         self.helper = FormHelper()
         self.helper.form_tag = True
         self.helper.form_class = "form-horizontal"
@@ -124,7 +123,7 @@ class OrderRecipeForm(BSModalModelForm):
         self.helper.label_class = "col-md-3 create-label"
         self.helper.field_class = "col-md-9"
         self.helper.layout = Layout(
-            Div(Field("amount_multiplier", step=0.25), ButtonHolder(Submit("opslaan", "Opslaan")),)
+            Div(Field("amount_multiplier", step=0.25), ButtonHolder(Submit("opslaan", "Opslaan")), )
         )
 
 

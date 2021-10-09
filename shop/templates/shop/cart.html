@@ -13,7 +13,7 @@
     <h3>Bestelling # {{ forloop.counter }}
       {% if order.is_available %}
       <button class="float-right btn btn-outline-primary has-modal"
-              data-url="{% url 'confirm_order' order.id %}?advance_stage=1">Bestel!
+              data-url="{% url 'confirm_order' order.id %}?advance_stage=1">Bevestig bestelling!
       </button>
       {% else %}
       <span class="bg-warning">Eén of meerdere ingredienten zijn niet beschikbaar</span>
