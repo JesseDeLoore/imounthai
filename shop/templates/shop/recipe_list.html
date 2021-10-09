@@ -18,7 +18,7 @@
                   <a href="{% url "recipe_detail" recipe.id %}">{% image recipe.image fill-350x186-c100 alt="Card Image" class="card-img-top" %}</a>
               </div>
               <div class="card-body">
-                  <button class="btn btn-outline-primary btn-sm has-modal" data-url="{% url "add_to_cart" recipe.id %}">Bestel</button><br/><br/>
+                  <button class="btn btn-outline-primary btn-sm has-modal" data-url="{% url 'add_to_cart' recipe.id %}">In winkelwagen</button><br/><br/>
                   <h5 class="card-title">
                       <a href="{% url "recipe_detail" recipe.id %}">{{ recipe.name }}</a>
                   </h5>

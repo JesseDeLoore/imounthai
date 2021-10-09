@@ -79,7 +79,9 @@
         {% if user.is_authenticated %}
         <li class="nav-item ">
           <a class="btn btn-outline-light nav-link" href="{% url 'shopping_cart' %}"><i
-              class="fas fa-shopping-cart"></i></a>
+              class="fas fa-shopping-cart"></i>
+            <sub class="font-weight-bold text-dark rounded-circle bg-light">
+              &nbsp;{{ user.orders_in_cart }}&nbsp;</sub></a>
         </li>
 
         <li class="nav-item dropdown">

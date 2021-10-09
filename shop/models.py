@@ -7,7 +7,6 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Model
 from django_measurement.models import MeasurementField
-from measurement.base import MeasureBase
 from measurement.measures import Mass, Volume, Energy, Time
 from django.utils.translation import gettext_lazy as _
 
@@ -26,9 +25,18 @@ def short(val):
     return val
 
 
+def orders_in_cart(self:User):
+    return sum(o.ordered_recipes.count() for o in self.order_set.filter(status=OrderStatus.IN_CART).all())
+
+
+User.add_to_class("orders_in_cart", orders_in_cart)
+
+
 class ShopPreferences(Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shop_preferences")
     show_vat = models.BooleanField(default=True)
+
+
 
 
 class MeasurementHolder(object):
