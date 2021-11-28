@@ -32,7 +32,7 @@ class IngredientForm(forms.ModelForm):
         self.fields["ingredient"].queryset = Ingredient.objects.filter(is_available=True)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        if not self.instance.ingredient:
+        if not hasattr(self.instance, "ingredient") or not self.instance.ingredient:
             return
         if self.instance.ingredient.price_unit is not None:
             self.fields.pop("amount_units")
