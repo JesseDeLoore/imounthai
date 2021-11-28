@@ -8314,3 +8314,7 @@ a.text-dark:focus, a.text-dark:hover {
         width: 15%;
     }
 }
+
+.hidden {
+    display: none;
+}
