@@ -24,7 +24,7 @@
 <br>
 <script type="text/javascript" src='{% static "js/jquery.formset.js" %}'></script>
 <script type="text/javascript">
-    $('.formset_row-{{ formset.prefix }}').formset({
+    $(`.formset_row-{{ formset.prefix }}`).formset({
         addText: '<i class="fas fa-plus"></i>',
         deleteText: '<i class="fas fa-trash"></i>',
         prefix: '{{ formset.prefix }}',
