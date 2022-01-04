@@ -84,6 +84,11 @@ html {
     box-sizing: inherit;
 }
 
+.hidden {
+    display: none;
+}
+
+
 @-ms-viewport {
     width: device-width;
 }
@@ -8314,3 +8319,4 @@ a.text-dark:focus, a.text-dark:hover {
         width: 15%;
     }
 }
+
