@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Model
+from django.template.loader import get_template
 from django_measurement.models import MeasurementField
 from measurement.measures import Mass, Volume, Energy, Time
 from django.utils.translation import gettext_lazy as _
@@ -13,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
+from nbconvert.filters import html2text
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, FieldRowPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Orderable, Page
@@ -35,8 +37,6 @@ User.add_to_class("orders_in_cart", orders_in_cart)
 class ShopPreferences(Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shop_preferences")
     show_vat = models.BooleanField(default=True)
-
-
 
 
 class MeasurementHolder(object):
@@ -256,6 +256,8 @@ class Order(ClusterableModel, Orderable):
             for recipe in self.ordered_recipes.all():
                 recipe.fixate_recipe()
             self.save()
+            if self.user.email:
+                self.mail_confirmation()
             return
 
     @property
@@ -283,6 +285,12 @@ class Order(ClusterableModel, Orderable):
         InlinePanel("ordered_recipes", heading="Bestelde Recepten"),
         InlinePanel("custom_lines", heading="Andere lijnen"),
     ]
+
+    def mail_confirmation(self):
+        subj = f"Orderbevestiging Immuunthai #{self.id} ({self.delivery_date:%Y-%m-%d})"
+        body = get_template("shop/email/order_confirmation.html")
+        html_body = body.render({"self": self})
+        self.user.email_user(subject=subj, message=html2text(html_body), html_message=html_body)
 
 
 class ProcessMethod(Orderable):
