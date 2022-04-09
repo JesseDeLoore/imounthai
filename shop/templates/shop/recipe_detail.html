@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col">
       <h2>{{ recipe.name }}
-      <button class="btn btn-outline-primary btn-lg float-right has-modal" data-url="{% url "add_to_cart" recipe.id %}">In winkelwagen</button>
+      <button class="btn btn-outline-primary btn-lg float-right has-modal" data-url="{% url 'add_to_cart' recipe.id %}">In winkelwagen</button>
         </h2>
     </div>
   </div>
@@ -21,7 +21,7 @@
     <div class="col-md-12 col-lg-6">
       <div class="row">
         <div class="col">
-          {% image recipe.image fill-500x266-c100 alt="Recipe Image" class="img-fluid" %}
+          {% image recipe.image fill-500x500-c100 alt="Recipe Image" class="img-fluid" %}
         </div>
       </div>
       <div class="row">

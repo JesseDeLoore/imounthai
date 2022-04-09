@@ -175,12 +175,9 @@
 {% cookie_consent_decline_url cookie_groups as url_decline %}
 <script type="text/javascript">
   var cookie_groups = [];
-  {%
-    for cookie_group in cookie_groups %}
+  {% for cookie_group in cookie_groups %}
   cookie_groups.push("{{ cookie_group.varname }}");
-  {%
-    endfor %
-  }
+  {% endfor %}
 
 
   $(function () {

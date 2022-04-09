@@ -1,0 +1,31 @@
+<p>Beste {{ self.user.first_name }}<br/>
+  <br/>
+  We hebben je bestelling goed ontvangen en je kan het komen afhalen op {{ self.delivery_date|date:"l d M Y" }}.
+</p>
+<h3> Totaal: {{ self.total_price| floatformat:2 }}</h3>
+<table>
+  {% for recipe in self.ordered_recipes.all %}
+    <thead>
+    <tr>
+      <th>{{ recipe.recipe.name }}</th>
+      <th>{{ recipe.amount_multiplier }} x &euro; {{ recipe.serving_price }} = </th>
+      <th>&euro;{{ recipe.sell_price|floatformat:2 }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ingredient in recipe.recipe.ingredients.all %}
+    <tr>
+    <td>{{ ingredient }}</td><td>&euro; {{ ingredient.price_with_vat | floatformat:2 }}</td>
+    </tr>
+
+
+    {% endfor %}
+    </tbody>
+  {% endfor %}
+
+</table>
+<p>
+  Tot binnenkort!<br/><br/>
+
+  Immuunthai
+</p>
