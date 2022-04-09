@@ -8,7 +8,7 @@
     <thead>
     <tr>
       <th>{{ recipe.recipe.name }}</th>
-      <th>{{ recipe.amount_multiplier }} x &euro; {{ recipe.serving_price }} = </th>
+      <th>{{ recipe.amount_multiplier }} x &euro; {{ recipe.serving_price|floatformat:2 }} = </th>
       <th>&euro;{{ recipe.sell_price|floatformat:2 }}</th>
     </tr>
     </thead>
