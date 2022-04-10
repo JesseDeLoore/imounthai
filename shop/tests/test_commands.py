@@ -21,7 +21,7 @@ class TestRemindNoOrder:
         self.out = StringIO()
 
     def test_no_history(self, send_mail):
-        call_command("remind_no_order", stdout=self.out)
+        call_command("remind_no_order", stdout=self.out, dryrun=False)
 
         send_mail.assert_not_called()
         assert not self.order.user.shop_preferences.first().last_reminder
@@ -30,7 +30,7 @@ class TestRemindNoOrder:
     def test_last_order_recent(self, send_mail):
         self.order.delivery_date = pd.Timestamp.now("CET") - pd.Timedelta(days=2)
         self.order.save()
-        call_command("remind_no_order", stdout=self.out)
+        call_command("remind_no_order", stdout=self.out, dryrun=False)
 
         send_mail.assert_not_called()
         assert not self.order.user.shop_preferences.first().last_reminder
@@ -43,7 +43,7 @@ class TestRemindNoOrder:
         preferences.allow_reminders = False
         preferences.save()
         self.order.save()
-        call_command("remind_no_order", stdout=self.out)
+        call_command("remind_no_order", stdout=self.out, dryrun=False)
 
         send_mail.assert_not_called()
         assert not preferences.last_reminder
@@ -55,7 +55,7 @@ class TestRemindNoOrder:
         self.order.user.email = "my.name"
         self.order.user.save()
         self.order.save()
-        call_command("remind_no_order", stdout=self.out)
+        call_command("remind_no_order", stdout=self.out, dryrun=False)
 
         send_mail.assert_not_called()
         assert not self.order.user.shop_preferences.first().last_reminder
@@ -69,7 +69,7 @@ class TestRemindNoOrder:
         preferences.last_reminder = now
         preferences.save()
         self.order.save()
-        call_command("remind_no_order", stdout=self.out)
+        call_command("remind_no_order", stdout=self.out, dryrun=False)
 
         send_mail.assert_not_called()
         assert preferences.last_reminder == now
@@ -80,7 +80,7 @@ class TestRemindNoOrder:
 
         self.order.delivery_date = pd.Timestamp.now("CET") - pd.Timedelta(days=4)
         self.order.save()
-        call_command("remind_no_order", stdout=self.out)
+        call_command("remind_no_order", stdout=self.out, dryrun=False)
 
         send_mail.assert_called_once()
         assert self.order.user.shop_preferences.first().last_reminder
@@ -100,7 +100,7 @@ Immuunthai\s*"""), self.out.getvalue())
         self.order.delivery_date = pd.Timestamp.now("CET") - pd.Timedelta(days=4)
         self.order.status = OrderStatus.ORDERED
         self.order.save()
-        call_command("remind_no_order", stdout=self.out)
+        call_command("remind_no_order", stdout=self.out, dryrun=False)
 
         send_mail.assert_called_once()
         assert self.order.user.shop_preferences.first().last_reminder
