@@ -8,11 +8,12 @@ from django.template.loader import get_template
 from shop.models import short, OrderStatus
 from html2text import html2text
 
+
 class Command(BaseCommand):
     help = "Remind all users that haven't ordered yet they should, by mail"
 
     def add_arguments(self, parser):
-        parser.add_argument('--dryrun', action="store_false")  # default false
+        parser.add_argument('--sendmails', action="store_true")  # default false
 
     def handle(self, *args, **options):
         CUTOFF_DATE = pd.Timestamp.now("CET").floor("D") - pd.Timedelta(days=3)
@@ -32,7 +33,7 @@ class Command(BaseCommand):
             body = get_template("shop/email/no_order_this_week.html")
             html_body = body.render({"user": user, "cart":cart_order, "last_order": last_order, "domain":settings.BASE_URL})
             text_body = html2text(html_body)
-            if not options["dryrun"]:
+            if options["sendmails"]:
                 user.email_user(subject=subj, message=text_body, html_message=html_body)
                 prefs = user.shop_preferences.first()
                 prefs.last_reminder = pd.Timestamp.now("CET")
