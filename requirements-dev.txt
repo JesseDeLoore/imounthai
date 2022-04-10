@@ -1,4 +1,4 @@
-include requirements.txt
+-r requirements.txt
 pytest
 pytest-django
 pytest-env
