@@ -1,0 +1,19 @@
+<p>Beste {{ user.first_name }}<br/>
+  <br/>
+  We hebben deze week nog geen bestelling ontvangen van jou.<br/>
+  {% if cart %}
+    Er zit nog een bestelling in <a href="{{ domain }}{% url 'shopping_cart' %}">je winkelmandje</a>.<br/>
+    {% for recipe in cart.first.ordered_recipes.all %}
+      {{ recipe.amount_multiplier }} x {{ recipe.recipe.name }}<br/>
+    {% endfor %}
+  {% elif last_order %}
+    Je bestelde vorige keer {{ last_order }}
+    Je kan <a href="{{ domain }}{% url 'order_history' %}">hier</a> je bestelgeschiedenis bekijken en opnieuw bestellen
+  {% endif %}
+</p>
+<p>
+  Hopelijk tot snel!<br/><br/>
+
+  Immuunthai
+</p>
+

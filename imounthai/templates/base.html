@@ -29,7 +29,7 @@
     }
   </style>
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  {% if request|cookie_group_accepted:"analytics" %}
+  {% if request and request|cookie_group_accepted:"analytics" %}
 
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.GOOGLE_TAG_ID }}"></script>
 
@@ -137,7 +137,8 @@
 {% block extra_js %}
 {# Override this in templates to add extra javascript #}
 {% endblock %}
-{% if request|cookie_group_accepted:"analytics" %}
+{% if not request %}
+{% elif request|cookie_group_accepted:"analytics" %}
 <script>
   (function (h, o, t, j, a, r) {
     h.hj = h.hj || function () {
@@ -166,45 +167,45 @@
 
 
 </script>
-{% if request|cookie_consent_enabled %}
-{% not_accepted_or_declined_cookie_groups request as cookie_groups %}
+{% if request and request|cookie_consent_enabled %}
+  {% not_accepted_or_declined_cookie_groups request as cookie_groups %}
 
-{% if cookie_groups %}
-{% url "cookie_consent_cookie_group_list" as url_cookies %}
-{% cookie_consent_accept_url cookie_groups as url_accept %}
-{% cookie_consent_decline_url cookie_groups as url_decline %}
-<script type="text/javascript">
-  var cookie_groups = [];
-  {% for cookie_group in cookie_groups %}
-  cookie_groups.push("{{ cookie_group.varname }}");
-  {% endfor %}
+  {% if cookie_groups %}
+    {% url "cookie_consent_cookie_group_list" as url_cookies %}
+    {% cookie_consent_accept_url cookie_groups as url_accept %}
+    {% cookie_consent_decline_url cookie_groups as url_decline %}
+    <script type="text/javascript">
+      var cookie_groups = [];
+      {% for cookie_group in cookie_groups %}
+      cookie_groups.push("{{ cookie_group.varname }}");
+      {% endfor %}
 
 
-  $(function () {
-    showCookieBar({
-      content: `
-{% with cookie_groups=cookie_groups|join:", " %}
-<div class="navbar fixed-bottom navbar-expand-lg bg-secondary cookie-bar">
-<div class="container">
-<p>This site uses {{ cookie_groups }} cookies for better performance and user experience.<br/>
- You can find our privacy policy <a href="{% url 'privacy_policy' %}">here</a>.
- Do you agree to use cookies? </p>
- <ul class="navbar-nav ml-auto">
- <li class="nav-item "><a class="btn btn-outline-light nav-link cc-cookie-accept" href="{{ url_accept }}" >Accept</a></li>
- <li class="nav-item "><a class="btn btn-outline-light nav-link cc-cookie-decline" href="{{ url_decline }}" >Decline</a></li>
- <!--<li class="nav-item "><a class="btn btn-outline-light nav-link" href="{{ url_cookies }}">Cookies info</a></li>-->
- </ul>
-</div>
-</div>{% endwith %}`,
-      cookie_groups: cookie_groups,
-      cookie_decline: "{% get_decline_cookie_groups_cookie_string request cookie_groups %}",
-      beforeDeclined: function () {
-        document.cookie = "{% get_decline_cookie_groups_cookie_string request cookie_groups %}";
-      }
-    });
-  });
-</script>
-{% endif %}
+      $(function () {
+        showCookieBar({
+          content: `
+    {% with cookie_groups=cookie_groups|join:", " %}
+    <div class="navbar fixed-bottom navbar-expand-lg bg-secondary cookie-bar">
+    <div class="container">
+    <p>This site uses {{ cookie_groups }} cookies for better performance and user experience.<br/>
+     You can find our privacy policy <a href="{% url 'privacy_policy' %}">here</a>.
+     Do you agree to use cookies? </p>
+     <ul class="navbar-nav ml-auto">
+     <li class="nav-item "><a class="btn btn-outline-light nav-link cc-cookie-accept" href="{{ url_accept }}" >Accept</a></li>
+     <li class="nav-item "><a class="btn btn-outline-light nav-link cc-cookie-decline" href="{{ url_decline }}" >Decline</a></li>
+     <!--<li class="nav-item "><a class="btn btn-outline-light nav-link" href="{{ url_cookies }}">Cookies info</a></li>-->
+     </ul>
+    </div>
+    </div>{% endwith %}`,
+          cookie_groups: cookie_groups,
+          cookie_decline: "{% get_decline_cookie_groups_cookie_string request cookie_groups %}",
+          beforeDeclined: function () {
+            document.cookie = "{% get_decline_cookie_groups_cookie_string request cookie_groups %}";
+          }
+        });
+      });
+    </script>
+  {% endif %}
 {% endif %}
 </body>
 </html>

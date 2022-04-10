@@ -11,8 +11,16 @@ from shop.models import (
     RecipeIngredient,
     OrderRecipe,
     ProcessMethod,
-    StorageMethod,
+    StorageMethod, ShopPreferences,
 )
+
+
+class ShopPreferencesFactory(DjangoModelFactory):
+    class Meta:
+        model = ShopPreferences
+
+    show_vat = True
+    allow_reminders = True
 
 
 class UserFactory(DjangoModelFactory):
@@ -24,9 +32,17 @@ class UserFactory(DjangoModelFactory):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     email = factory.Faker("ascii_free_email")
+
+    password = factory.PostGenerationMethodCall('set_password', 'my_fixed_userpassword')
     is_staff = False
     is_active = True
 
+    @factory.post_generation
+    def add_shop_preferences(self, create, extracted):
+        if not create:
+            return
+
+        ShopPreferencesFactory(user=self)
 
 class IngredientFactory(DjangoModelFactory):
     class Meta:
