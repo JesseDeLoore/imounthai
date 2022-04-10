@@ -13,6 +13,7 @@ html2text
 ipython
 jupyter
 psycopg2-binary
+sentry-sdk
 social-auth-app-django
 uvicorn
 wagtail>=2.11
