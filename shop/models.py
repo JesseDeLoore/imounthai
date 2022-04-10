@@ -22,13 +22,13 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 
 
 def short(val):
-    if len(val) > 30:
+    if len(val) > 34:
         return f"{val[:30]} ..."
     return val
 
 
-def orders_in_cart(self:User):
-    return sum(o.ordered_recipes.count() for o in self.order_set.filter(status=OrderStatus.IN_CART).all())
+def orders_in_cart(self: User):
+    return sum(o.ordered_recipes.count() for o in self.orders.filter(status=OrderStatus.IN_CART).all())
 
 
 User.add_to_class("orders_in_cart", orders_in_cart)
@@ -36,6 +36,8 @@ User.add_to_class("orders_in_cart", orders_in_cart)
 
 class ShopPreferences(Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shop_preferences")
+    allow_reminders = models.BooleanField(verbose_name="Sta herinnerings mails toe", default=True, blank=False, null=False)
+    last_reminder = models.DateTimeField(verbose_name="Laatste keer dat er een herinnering werd gestuurd", blank=True, null=True)
     show_vat = models.BooleanField(default=True)
 
 
@@ -211,7 +213,7 @@ class OrderStatus(models.TextChoices):
 class Order(ClusterableModel, Orderable):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="orders")
     status = models.CharField(max_length=2, choices=OrderStatus.choices, default=OrderStatus.IN_CART)
     delivery_date = models.DateTimeField(null=True, blank=True)
     cancelled = models.BooleanField(default=False)
