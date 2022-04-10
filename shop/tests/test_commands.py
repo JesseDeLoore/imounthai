@@ -58,7 +58,7 @@ class TestRemindNoOrder:
         call_command("remind_no_order", stdout=self.out)
 
         send_mail.assert_not_called()
-        assert not self.order.user.shop_preferences.first().preferences.last_reminder
+        assert not self.order.user.shop_preferences.first().last_reminder
         assert not self.out.getvalue()
 
     def test_already_reminded(self, send_mail):
