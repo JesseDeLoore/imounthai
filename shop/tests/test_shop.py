@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+import re
 from datetime import datetime
 
 import pytest
 from django.test import Client
+from pytz import UTC
 
 from shop.forms import next_delivery_day
 from shop.models import Ingredient, OrderRecipe, OrderStatus
@@ -97,8 +99,15 @@ def test_next_stage():
 @pytest.mark.django_db
 def test_fixate_order(basic_order: OrderRecipe):
     basic_order.fixate_recipe()
-    print(basic_order.fixed_recipe)
-    assert len(basic_order.fixed_recipe.split("\n")) == 4
+    assert re.match(r"""\s*Fruitpap
+4 x 1 = 4
+1 x € \d.\d\d = € \d.\d\d
+
+€ \d.\d\d: banaan - 50.0 g
+€ \d.\d\d: kiwi - 70.0 g
+€ \d.\d\d: appel - 130.0 g
+----------------------
+€ \d.\d\d\s*""", basic_order.fixed_recipe)
 
 
 @pytest.mark.django_db
@@ -107,23 +116,21 @@ def test_confirm_order():
     order = OrderFactory(user_id=user.id)
     assert order.status == OrderStatus.IN_CART
     c = Client()
-    delivery = datetime(2021, 5, 17)
+    assert c.login(username=user.username, password="my_fixed_userpassword")
+    delivery = datetime(2021, 5, 17, tzinfo=UTC)
     delivery_str = delivery.strftime("%Y-%m-%d")
     notes = "These are notes"
-    c.post("/login", data={"username": user.username, "password": user.password})
-    r = c.post(
-        f"/order/confirm_order/{order.id}", data={"delivery_date": delivery_str, "notes": notes},
-    )
+    r = c.post(f"/shop/order/confirm/{order.id}", data={"delivery_date": delivery_str, "notes": notes})
     order.refresh_from_db()
     assert order.status == OrderStatus.IN_CART
     assert order.delivery_date == delivery
     assert order.notes == notes
     c.post(
-        f"/order/confirm_order/{order.id}?advance_stage=1",
+        f"/shop/order/confirm/{order.id}?advance_stage=1",
         data={"delivery_date": delivery_str, "notes": notes},
     )
     order.refresh_from_db()
-    assert order.status == OrderStatus.IN_CART
+    assert order.status == OrderStatus.ORDERED
     assert order.delivery_date == delivery
     assert order.notes == notes
 

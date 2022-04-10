@@ -289,6 +289,8 @@ class Order(ClusterableModel, Orderable):
     ]
 
     def mail_confirmation(self):
+        if not self.delivery_date:
+            return
         subj = f"Orderbevestiging Immuunthai #{self.id} ({self.delivery_date:%Y-%m-%d})"
         body = get_template("shop/email/order_confirmation.html")
         html_body = body.render({"self": self})

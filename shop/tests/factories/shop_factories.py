@@ -32,6 +32,8 @@ class UserFactory(DjangoModelFactory):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     email = factory.Faker("ascii_free_email")
+
+    password = factory.PostGenerationMethodCall('set_password', 'my_fixed_userpassword')
     is_staff = False
     is_active = True
 
@@ -41,7 +43,6 @@ class UserFactory(DjangoModelFactory):
             return
 
         ShopPreferencesFactory(user=self)
-
 
 class IngredientFactory(DjangoModelFactory):
     class Meta:
