@@ -12,7 +12,7 @@ class Command(BaseCommand):
     help = "Remind all users that haven't ordered yet they should, by mail"
 
     def add_arguments(self, parser):
-        parser.add_argument('dry-run', action="store_false")  # default false
+        parser.add_argument('--dry-run', action="store_false")  # default false
 
     def handle(self, *args, **options):
         CUTOFF_DATE = pd.Timestamp.now("CET").floor("D") - pd.Timedelta(days=3)
