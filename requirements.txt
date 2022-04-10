@@ -12,6 +12,7 @@ gunicorn
 html2text
 ipython
 jupyter
+pandas
 psycopg2-binary
 sentry-sdk
 social-auth-app-django
