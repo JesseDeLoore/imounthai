@@ -52,14 +52,27 @@ class TestRemindNoOrder:
     def test_no_valid_email(self, send_mail):
 
         self.order.delivery_date = pd.Timestamp.now("CET") - pd.Timedelta(days=4)
-        preferences = self.order.user.shop_preferences.first()
         self.order.user.email = "my.name"
         self.order.user.save()
         self.order.save()
         call_command("remind_no_order", stdout=self.out)
 
         send_mail.assert_not_called()
-        assert not preferences.last_reminder
+        assert not self.order.user.shop_preferences.first().preferences.last_reminder
+        assert not self.out.getvalue()
+
+    def test_already_reminded(self, send_mail):
+
+        self.order.delivery_date = pd.Timestamp.now("CET") - pd.Timedelta(days=4)
+        preferences = self.order.user.shop_preferences.first()
+        now = pd.Timestamp.now("CET") - pd.Timedelta(days=2)
+        preferences.last_reminder = now
+        preferences.save()
+        self.order.save()
+        call_command("remind_no_order", stdout=self.out)
+
+        send_mail.assert_not_called()
+        assert preferences.last_reminder == now
         assert not self.out.getvalue()
 
 
