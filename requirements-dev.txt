@@ -3,3 +3,4 @@ pytest
 pytest-django
 pytest-env
 factory-boy
+pytest-freezegun
