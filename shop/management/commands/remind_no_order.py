@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.db.models import Max, F
 from django.template.loader import get_template
 
-from shop.models import short, OrderStatus
+from shop.models import short, OrderStatus, ShopPreferences
 from html2text import html2text
 
 
@@ -36,6 +36,8 @@ class Command(BaseCommand):
             if options["sendmails"]:
                 user.email_user(subject=subj, message=text_body, html_message=html_body)
                 prefs = user.shop_preferences.first()
+                if not prefs:
+                    prefs = ShopPreferences(user=user)
                 prefs.last_reminder = pd.Timestamp.now("CET")
                 prefs.save()
             self.stdout.write(f"Sending mail to {user=}\n{last_order=}\n{cart_order=}\n{text_body}")
