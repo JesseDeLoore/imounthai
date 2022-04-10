@@ -11,12 +11,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='shoppreferences',
+            model_name='ShopPreferences',
             name='allow_reminders',
             field=models.BooleanField(default=True, verbose_name='Sta herinnerings mails toe'),
         ),
         migrations.AddField(
-            model_name='shoppreferences',
+            model_name='ShopPreferences',
             name='last_reminder',
             field=models.DateTimeField(blank=True, null=True, verbose_name='Laatste keer dat er een herinnering werd gestuurd'),
         ),
