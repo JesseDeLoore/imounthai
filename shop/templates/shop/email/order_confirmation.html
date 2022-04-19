@@ -1,31 +1,51 @@
+<style>
+    table, th, td {
+      border: 1px solid black;
+    }
+    
+    tr:nth-child(odd) {
+      background-color: #30864d;
+      color:#e1bc25;
+      font-weight:bold
+
+    }
+</style>
+
 <p>Beste {{ self.user.first_name }}<br/>
   <br/>
-  We hebben je bestelling goed ontvangen en je kan het komen afhalen op {{ self.delivery_date|date:"l d M Y" }}.
+  We hebben je bestelling goed ontvangen. Hieronder vind je een overzicht.
+  
+  Je hebt ervoor gekozen je bestelling op te halen op {{ self.delivery_date|date:"l d M Y" }}.<br>
+  Dit kan tussen 16u00 en 19u30 te<br>
+        De Heuvel 31<br>
+        3600 Genk (Boxberg)<br>
 </p>
-<h3> Totaal: {{ self.total_price| floatformat:2 }}</h3>
-<table>
+<h3> Totaal: &euro;{{ self.total_price| floatformat:2 }}</h3>
+<table style="width:50%">
   {% for recipe in self.ordered_recipes.all %}
-    <thead>
-    <tr>
-      <th>{{ recipe.recipe.name }}</th>
-      <th>{{ recipe.amount_multiplier }} x &euro; {{ recipe.serving_price|floatformat:2 }} = </th>
-      <th>&euro;{{ recipe.sell_price|floatformat:2 }}</th>
+<!--     <tr style="background-color:#30864d;color:#e1bc25;font-weight:bold"> -->
+        <tr style="background-color:#dddddd;font-weight:bold">
+      <td>{{ recipe.recipe.name }}</td>
+      <td>{{ recipe.amount_multiplier }} x &euro; {{ recipe.serving_price|floatformat:2 }} = &euro;{{ recipe.sell_price|floatformat:2 }}</td>
     </tr>
-    </thead>
-    <tbody>
-    {% for ingredient in recipe.recipe.ingredients.all %}
     <tr>
-    <td>{{ ingredient }}</td><td>&euro; {{ ingredient.price_with_vat | floatformat:2 }}</td>
+        <td colspan="2" style="text-align:left">
+        {% for recipeingredient in recipe.recipe.ingredients.all %}
+            {{ recipeingredient.ingredient.name }} ({{ recipeingredient.amount_mass.g | floatformat:0 }}g), 
+        {% endfor %}
+        </td>
     </tr>
-
-
-    {% endfor %}
-    </tbody>
   {% endfor %}
 
 </table>
+
+<h3>Opmerkingen</h3>
 <p>
-  Tot binnenkort!<br/><br/>
+    <i>{{ self.notes }}</i>
+</p>
+
+<p>
+  Tot dan!<br/><br/>
 
   Immuunthai
 </p>

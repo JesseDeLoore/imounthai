@@ -1,19 +1,23 @@
 <p>Beste {{ user.first_name }}<br/>
   <br/>
-  We hebben deze week nog geen bestelling ontvangen van jou.<br/>
+  Je hebt in het verleden maaltijden besteld bij ImmuunThai, maar nu hebben we al even niets van je gehoord.<br/>
+  Intussen hebben we weer nieuwe recepten in onze <a href="{{ domain }}/shop/recipe">webshop</a>.<br/>
   {% if cart %}
-    Er zit nog een bestelling in <a href="{{ domain }}{% url 'shopping_cart' %}">je winkelmandje</a>.<br/>
+    Er zit trouwens nog een bestelling in <a href="{{ domain }}{% url 'shopping_cart' %}">je winkelmandje</a>.<br/>
     {% for recipe in cart.first.ordered_recipes.all %}
       {{ recipe.amount_multiplier }} x {{ recipe.recipe.name }}<br/>
     {% endfor %}
   {% elif last_order %}
     Je bestelde vorige keer {{ last_order }}
-    Je kan <a href="{{ domain }}{% url 'order_history' %}">hier</a> je bestelgeschiedenis bekijken en opnieuw bestellen
+    Je kan <a href="{{ domain }}{% url 'order_history' %}">hier</a> je bestelgeschiedenis bekijken en eventueel opnieuw bestellen.
   {% endif %}
 </p>
 <p>
   Hopelijk tot snel!<br/><br/>
 
-  Immuunthai
+  ImmuunThai
+    
+    PS - Je ontvangt deze e-mail omdat we je e-mailadres nog hebben bijgehouden na je vorige bestelling. Bestel je hierna niet, dan respecteren we dat en zal je geen gelijkaardige e-mails meer ontvangen.<br/>
+    Heb je nog vragen, contacteer ons dan via info@immuunthai.be
 </p>
 
