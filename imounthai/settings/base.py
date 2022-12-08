@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -20,12 +21,10 @@ from sentry_sdk.integrations.django import DjangoIntegration
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-SENTRY_DSN = "https://1545c16569bb474ebd4b4103890e0008@o455034.ingest.sentry.io/5754239"
 SENTRY_SERVER_NAME="staging.immuunthai.be"
-if SENTRY_DSN:
+if (
+    SENTRY_DSN := "https://1545c16569bb474ebd4b4103890e0008@o455034.ingest.sentry.io/5754239"
+):
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()],

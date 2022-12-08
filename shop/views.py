@@ -39,8 +39,7 @@ def _get_user_order(user: User):
 @login_required
 def shopping_cart(request: HttpRequest):
     orders = _get_cart_order(request.user)
-    open_modal = request.GET.get("open_modal")
-    if open_modal:
+    if open_modal := request.GET.get("open_modal"):
         return render(
             request, "shop/cart.html", context={"orders": orders, "open_recipe": int(open_modal)},
         )
