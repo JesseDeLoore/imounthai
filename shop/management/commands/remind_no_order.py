@@ -29,11 +29,11 @@ class Command(BaseCommand):
                 continue
             last_order = ", ".join(short(recipe.recipe.name) for recipe in last_order.ordered_recipes.all())
             cart_order = user.orders.filter(status=OrderStatus.IN_CART).all()
-            subj = f"Immuunthai: Niets vergeten deze week ?"
             body = get_template("shop/email/no_order_this_week.html")
             html_body = body.render({"user": user, "cart":cart_order, "last_order": last_order, "domain":settings.BASE_URL})
             text_body = html2text(html_body)
             if options["sendmails"]:
+                subj = "Immuunthai: Niets vergeten deze week ?"
                 user.email_user(subject=subj, message=text_body, html_message=html_body)
                 prefs = user.shop_preferences.first()
                 if not prefs:

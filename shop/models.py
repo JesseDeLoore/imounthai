@@ -22,9 +22,7 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 
 
 def short(val):
-    if len(val) > 34:
-        return f"{val[:30]} ..."
-    return val
+    return f"{val[:30]} ..." if len(val) > 34 else val
 
 
 def orders_in_cart(self: User):
@@ -498,21 +496,15 @@ class OrderRecipe(Orderable):
 
     @property
     def total_price(self):
-        if self.sell_price:
-            return self.sell_price
-        return self.serving_price * self.amount_multiplier
+        return self.sell_price or self.serving_price * self.amount_multiplier
 
     @property
     def serving_vat(self):
-        if self.order.show_vat:
-            return self.recipe.serving_vat
-        return 0
+        return self.recipe.serving_vat if self.order.show_vat else 0
 
     @property
     def total_vat(self):
-        if self.sell_vat:
-            return self.sell_vat
-        return self.serving_vat * self.amount_multiplier
+        return self.sell_vat or self.serving_vat * self.amount_multiplier
 
 
 class OrderCustomLine(Orderable):
@@ -539,6 +531,4 @@ class OrderCustomLine(Orderable):
 
     @property
     def total_vat(self):
-        if self.order.show_vat:
-            return self.unit_price * self.vat_pct / 100
-        return 0
+        return self.unit_price * self.vat_pct / 100 if self.order.show_vat else 0
